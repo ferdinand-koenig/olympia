@@ -8,7 +8,6 @@ public class Athlete{
     private float weight;
     private String name, sex;
     private Team team; //Could be an athlete member of several teams? => No
-    //private List<Event> events = new ArrayList<>();
     private List<Medal> medals = new ArrayList<>();
     private List<Participation> participations = new ArrayList<>();
 

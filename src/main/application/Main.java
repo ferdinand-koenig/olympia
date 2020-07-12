@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Main{
-
+    //JavaDoc fehlt
     public static void main(String[] args){
         IOHandler handler = new DBHandler();
         HashMap<Integer, Athlete> athletes = handler.read("C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\olympic - Copy.db");
