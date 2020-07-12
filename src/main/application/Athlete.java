@@ -3,7 +3,7 @@ package main.application;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Athlete{
+public class Athlete implements java.io.Serializable{
     private int id, height;
     private float weight;
     private String name, sex;

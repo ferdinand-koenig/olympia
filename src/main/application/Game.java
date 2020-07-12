@@ -1,6 +1,6 @@
 package main.application;
 
-public class Game {
+public class Game implements java.io.Serializable{
     private int year;
     private String season, city;
 

@@ -1,6 +1,6 @@
 package main.application;
 
-public class Event {
+public class Event implements java.io.Serializable{
     private String title, sport;
     private Game game;
 

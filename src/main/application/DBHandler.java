@@ -50,7 +50,7 @@ public class DBHandler implements IOHandler{
                 event = new Event(crop(attribute[13]), crop(attribute[12]), game);
                 event = (clipboard = events.putIfAbsent(event.getDescription(), event)) != null ? (Event) clipboard : event;
 
-                participation = new Participation(Integer.parseInt(attribute[3]), event);
+                participation = new Participation(attribute[3].equals("NA") ? -1 : Integer.parseInt(attribute[3]), event);
 
                 athlete = new Athlete(Integer.parseInt(crop(attribute[0])), removeDoubleQuotes(crop(attribute[1])), crop(attribute[2]), (attribute[4].equals("NA")) ? -1 : Integer.parseInt(attribute[4]), (attribute[5].equals("NA")) ? -1 : Float.parseFloat(attribute[5]), team, participation);
                 System.out.println("You are here:" + athlete.getId());
@@ -143,7 +143,7 @@ public class DBHandler implements IOHandler{
             entry = entry.concat(wrap(participation.getEvent().getSport())).concat(",");
             entry = entry.concat(wrap(participation.getEvent().getTitle())).concat(",");
             entry = entry.concat((medal = athlete.wonMedalFor(participation.getEvent())) == null ? "NA" : wrap(medal.getValue().toString())).concat("\n");
-            entries.add(personPartOne.concat(Integer.toString(participation.getAge())).concat(",").concat(personPartTwo).concat(entry));
+            entries.add(personPartOne.concat(participation.getAge() == -1 ? "NA" : Integer.toString(participation.getAge())).concat(",").concat(personPartTwo).concat(entry));
         }
         return entries;
     }

@@ -1,6 +1,6 @@
 package main.application;
 
-public class Team {
+public class Team implements java.io.Serializable{
     private String name, noc;
 
     public Team(String name, String noc){

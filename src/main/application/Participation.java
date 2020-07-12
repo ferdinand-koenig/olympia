@@ -1,6 +1,6 @@
 package main.application;
 
-public class Participation{
+public class Participation implements java.io.Serializable{
     private int age;
     private Event event;
 
