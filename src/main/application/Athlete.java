@@ -8,18 +8,18 @@ public class Athlete{
     private float weight;
     private String name, sex;
     private Team team; //Could be an athlete member of several teams? => No
-    private List<Event> events = new ArrayList<>();
+    //private List<Event> events = new ArrayList<>();
     private List<Medal> medals = new ArrayList<>();
-    //Dont forget the age
+    private List<Participation> participations = new ArrayList<>();
 
-    public Athlete(int id, String name, String sex, int height, float weight, Team team, Event event) {
+    public Athlete(int id, String name, String sex, int height, float weight, Team team, Participation participation) {
         setId(id);
         setHeight(height);
         setWeight(weight);
         setName(name);
         setSex(sex);
         setTeam(team);
-        getEvents().add(event);
+        addParticipation(participation);
     }
 
     public int getId() {
@@ -70,12 +70,12 @@ public class Athlete{
         this.team = team;
     }
 
-    public List<Event> getEvents() {
-        return events;
+    public List<Participation> getParticipations() {
+        return participations;
     }
 
-    public void addEvent(Event event){
-        events.add(event);
+    public void addParticipation(Participation participation) {
+        participations.add(participation);
     }
 
     public List<Medal> getMedals() {
@@ -85,6 +85,7 @@ public class Athlete{
     public void addMedal(Medal medal) {
         medals.add(medal);
     }
+
 
     //auf jeden Fall löschen
     public void debug(){

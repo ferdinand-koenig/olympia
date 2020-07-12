@@ -17,10 +17,12 @@ public class DBHandler implements IOHandler{
 
     @Override
     public HashMap<Integer, Athlete> read(String path) {
+        // validity of db
         String line;
         Pattern pattern = Pattern.compile(",");
         String[] attribute;
         Object clipboard;
+        Participation participation;
 
         HashMap<Integer, Athlete> athletes = new HashMap<>();
         Athlete athlete;
@@ -48,10 +50,12 @@ public class DBHandler implements IOHandler{
                 event = new Event(crop(attribute[13]), crop(attribute[12]), game);
                 event = (clipboard = events.putIfAbsent(event.getDescription(), event)) != null ? (Event) clipboard : event;
 
-                athlete = new Athlete(Integer.parseInt(crop(attribute[0])), removeDoubleQuotes(crop(attribute[1])), crop(attribute[2]), (attribute[4].equals("NA")) ? -1 : Integer.parseInt(attribute[4]), (attribute[5].equals("NA")) ? -1 : Float.parseFloat(attribute[5]), team, event);
+                participation = new Participation(Integer.parseInt(attribute[3]), event);
+
+                athlete = new Athlete(Integer.parseInt(crop(attribute[0])), removeDoubleQuotes(crop(attribute[1])), crop(attribute[2]), (attribute[4].equals("NA")) ? -1 : Integer.parseInt(attribute[4]), (attribute[5].equals("NA")) ? -1 : Float.parseFloat(attribute[5]), team, participation);
                 System.out.println("You are here:" + athlete.getId());
                 athlete = (clipboard = athletes.putIfAbsent(athlete.getId(), athlete)) != null ? (Athlete) clipboard : athlete;
-                if(!athlete.getEvents().contains(event)) athlete.addEvent(event);
+                if(!athlete.getParticipations().contains(participation)) athlete.addParticipation(participation);
 
                 if(!attribute[14].equals("NA"))
                     for(Medal.Value value : Medal.Value.values())
@@ -113,33 +117,33 @@ public class DBHandler implements IOHandler{
 
     private ArrayList<String> makeCsvEntries(Athlete athlete){
         ArrayList<String> entries = new ArrayList<>();
-        String person, entry, weight;
+        String personPartOne, personPartTwo, entry, weight;
         Medal medal;
 
-        person = wrap(Integer.toString(athlete.getId())).concat(",");
-        person = person.concat(wrap(addDoubleQuotes(athlete.getName()))).concat(",");
-        person = person.concat(wrap(athlete.getSex())).concat(",");
-        person = person.concat(athlete.getHeight() == -1 ? "NA" : Integer.toString(athlete.getHeight())).concat(",");
+        personPartOne = wrap(Integer.toString(athlete.getId())).concat(",");
+        personPartOne = personPartOne.concat(wrap(addDoubleQuotes(athlete.getName()))).concat(",");
+        personPartOne = personPartOne.concat(wrap(athlete.getSex())).concat(",");
+        personPartTwo = athlete.getHeight() == -1 ? "NA" : Integer.toString(athlete.getHeight()).concat(",");
         if(Float.compare(athlete.getWeight(), -1.0f) == 0){
             weight = "NA";
         }else{
             weight = isInteger(athlete.getWeight()) ? Integer.toString((int) athlete.getWeight()) : Float.toString(athlete.getWeight());
         }
-        person = person.concat(weight).concat(",");
+        personPartTwo = personPartTwo.concat(weight).concat(",");
 
-        person = person.concat(wrap(athlete.getTeam().getName())).concat(",");
-        person = person.concat(wrap(athlete.getTeam().getNoc())).concat(",");
+        personPartTwo = personPartTwo.concat(wrap(athlete.getTeam().getName())).concat(",");
+        personPartTwo = personPartTwo.concat(wrap(athlete.getTeam().getNoc())).concat(",");
 
         //sortieren fehlt //Anzahl passt ned
-        for(Event event : athlete.getEvents()){
-            entry = person.concat(wrap(event.getGame().toString())).concat(",");
-            entry = entry.concat(Integer.toString(event.getGame().getYear())).concat(",");
-            entry = entry.concat(wrap(event.getGame().getSeason())).concat(",");
-            entry = entry.concat(wrap(event.getGame().getCity())).concat(",");
-            entry = entry.concat(wrap(event.getSport())).concat(",");
-            entry = entry.concat(wrap(event.getTitle())).concat(",");
-            entry = entry.concat((medal = athlete.wonMedalFor(event)) == null ? "NA" : wrap(medal.getValue().toString())).concat("\n");
-            entries.add(entry);
+        for(Participation participation : athlete.getParticipations()){
+            entry = wrap(participation.getEvent().getGame().toString()).concat(",");
+            entry = entry.concat(Integer.toString(participation.getEvent().getGame().getYear())).concat(",");
+            entry = entry.concat(wrap(participation.getEvent().getGame().getSeason())).concat(",");
+            entry = entry.concat(wrap(participation.getEvent().getGame().getCity())).concat(",");
+            entry = entry.concat(wrap(participation.getEvent().getSport())).concat(",");
+            entry = entry.concat(wrap(participation.getEvent().getTitle())).concat(",");
+            entry = entry.concat((medal = athlete.wonMedalFor(participation.getEvent())) == null ? "NA" : wrap(medal.getValue().toString())).concat("\n");
+            entries.add(personPartOne.concat(Integer.toString(participation.getAge())).concat(",").concat(personPartTwo).concat(entry));
         }
         return entries;
     }
