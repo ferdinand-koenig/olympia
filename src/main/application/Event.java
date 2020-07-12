@@ -33,4 +33,8 @@ public class Event {
     public void setGame(Game game) {
         this.game = game;
     }
+
+    public String getDescription(){
+        return this.getTitle().concat(": ").concat(getGame().toString());
+    }
 }

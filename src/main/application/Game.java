@@ -33,4 +33,9 @@ public class Game {
     public void setCity(String city) {
         this.city = city;
     }
+
+    @Override
+    public String toString(){
+        return Integer.toString(this.getYear()).concat(" ").concat(this.getSeason());
+    }
 }

@@ -1,10 +1,14 @@
 package main.application;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class DBHandler implements IOHandler{
@@ -39,10 +43,10 @@ public class DBHandler implements IOHandler{
                 team = (clipboard = teams.putIfAbsent(team.getName(), team)) != null ? (Team) clipboard : team;
 
                 game = new Game(Integer.parseInt(attribute[9]), crop(attribute[10]), crop(attribute[11]));
-                game = (clipboard = games.putIfAbsent(Integer.toString(game.getYear()).concat(" ").concat(game.getSeason()), game)) != null ? (Game) clipboard : game;
+                game = (clipboard = games.putIfAbsent(game.toString(), game)) != null ? (Game) clipboard : game;
 
                 event = new Event(crop(attribute[13]), crop(attribute[12]), game);
-                event = (clipboard = events.putIfAbsent(event.getTitle(), event)) != null ? (Event) clipboard : event;
+                event = (clipboard = events.putIfAbsent(event.getDescription(), event)) != null ? (Event) clipboard : event;
 
                 athlete = new Athlete(Integer.parseInt(crop(attribute[0])), removeDoubleQuotes(crop(attribute[1])), crop(attribute[2]), (attribute[4].equals("NA")) ? -1 : Integer.parseInt(attribute[4]), (attribute[5].equals("NA")) ? -1 : Float.parseFloat(attribute[5]), team, event);
                 System.out.println("You are here:" + athlete.getId());
@@ -62,6 +66,20 @@ public class DBHandler implements IOHandler{
             e.printStackTrace();
         }
         return athletes;
+    }
+
+    @Override
+    public void write(HashMap<Integer, Athlete> athletes, String path) {
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(path))){
+            writer.write("\"ID\",\"Name\",\"Sex\",\"Age\",\"Height\",\"Weight\",\"Team\",\"NOC\",\"Games\",\"Year\",\"Season\",\"City\",\"Sport\",\"Event\",\"Medal\"\n");
+
+            for(Map.Entry<Integer, Athlete> athleteEntry : athletes.entrySet())
+                for(String entry : makeCsvEntries(athleteEntry.getValue()))
+                    writer.append(entry);
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+
     }
 
     private String crop(String string){
@@ -91,5 +109,50 @@ public class DBHandler implements IOHandler{
 
     private String removeDoubleQuotes(String string){
         return string == null ? null : string.replace("\"\"", "\"");
+    }
+
+    private ArrayList<String> makeCsvEntries(Athlete athlete){
+        ArrayList<String> entries = new ArrayList<>();
+        String person, entry, weight;
+        Medal medal;
+
+        person = wrap(Integer.toString(athlete.getId())).concat(",");
+        person = person.concat(wrap(addDoubleQuotes(athlete.getName()))).concat(",");
+        person = person.concat(wrap(athlete.getSex())).concat(",");
+        person = person.concat(athlete.getHeight() == -1 ? "NA" : Integer.toString(athlete.getHeight())).concat(",");
+        if(Float.compare(athlete.getWeight(), -1.0f) == 0){
+            weight = "NA";
+        }else{
+            weight = isInteger(athlete.getWeight()) ? Integer.toString((int) athlete.getWeight()) : Float.toString(athlete.getWeight());
+        }
+        person = person.concat(weight).concat(",");
+
+        person = person.concat(wrap(athlete.getTeam().getName())).concat(",");
+        person = person.concat(wrap(athlete.getTeam().getNoc())).concat(",");
+
+        //sortieren fehlt //Anzahl passt ned
+        for(Event event : athlete.getEvents()){
+            entry = person.concat(wrap(event.getGame().toString())).concat(",");
+            entry = entry.concat(Integer.toString(event.getGame().getYear())).concat(",");
+            entry = entry.concat(wrap(event.getGame().getSeason())).concat(",");
+            entry = entry.concat(wrap(event.getGame().getCity())).concat(",");
+            entry = entry.concat(wrap(event.getSport())).concat(",");
+            entry = entry.concat(wrap(event.getTitle())).concat(",");
+            entry = entry.concat((medal = athlete.wonMedalFor(event)) == null ? "NA" : wrap(medal.getValue().toString())).concat("\n");
+            entries.add(entry);
+        }
+        return entries;
+    }
+
+    private String wrap(String string){
+        return string == null ? null : "\"".concat(string).concat("\"");
+    }
+
+    private String addDoubleQuotes(String string){
+        return string == null ? null : string.replace("\"", "\"\"");
+    }
+
+    private boolean isInteger(float f){
+        return (f == (int) f);
     }
 }

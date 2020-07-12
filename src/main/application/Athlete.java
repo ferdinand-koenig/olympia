@@ -8,7 +8,7 @@ public class Athlete{
     private float weight;
     private String name, sex;
     private Team team; //Could be an athlete member of several teams? => No
-    private List<Event> events = new ArrayList<>(); //Can be part of several
+    private List<Event> events = new ArrayList<>();
     private List<Medal> medals = new ArrayList<>();
     //Dont forget the age
 
@@ -86,10 +86,19 @@ public class Athlete{
         medals.add(medal);
     }
 
+    //auf jeden Fall löschen
     public void debug(){
         System.out.println(id + ": " + name + " (" + height + ", " + sex + ", " + weight + ") Member of Team: " + team.getName() + " in " + team.getNoc());
     }
 
+    public Medal wonMedalFor(Event event){
+        for(Medal medal : this.getMedals())
+            if(medal.getEvent().equals(event))
+                return medal;
+        return null;
+    }
+
+    //eventuell weglassen
     @Override
     public int hashCode(){
         return this.id;

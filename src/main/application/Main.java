@@ -7,11 +7,13 @@ public class Main{
 
     public static void main(String[] args){
         IOHandler handler = new DBHandler();
-        HashMap<Integer, Athlete> athletes = handler.read("C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\olympic.db");
+        HashMap<Integer, Athlete> athletes = handler.read("C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\olympic - Copy.db");
 
         for(Map.Entry<Integer, Athlete> athleteEntry : athletes.entrySet()){
             athleteEntry.getValue().debug();
         }
+
+        handler.write(athletes, "C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\olympia - Test.db");
     }
 
 
