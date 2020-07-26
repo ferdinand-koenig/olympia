@@ -41,7 +41,7 @@ public class DBHandler implements IOHandler{
             while((line = in.readLine()) != null) {
                 attribute = fixSplit(pattern.split(line));
 
-                team = new Team(crop(attribute[6]), crop(attribute[7]));
+                team = new Team(removeDoubleQuotes(crop(attribute[6])), crop(attribute[7]));
                 team = (clipboard = teams.putIfAbsent(team.getName(), team)) != null ? (Team) clipboard : team;
 
                 game = new Game(Integer.parseInt(attribute[9]), crop(attribute[10]), crop(attribute[11]));
@@ -123,6 +123,7 @@ public class DBHandler implements IOHandler{
         personPartOne = wrap(Integer.toString(athlete.getId())).concat(",");
         personPartOne = personPartOne.concat(wrap(addDoubleQuotes(athlete.getName()))).concat(",");
         personPartOne = personPartOne.concat(wrap(athlete.getSex())).concat(",");
+
         personPartTwo = athlete.getHeight() == -1 ? "NA" : Integer.toString(athlete.getHeight()).concat(",");
         if(Float.compare(athlete.getWeight(), -1.0f) == 0){
             weight = "NA";
@@ -130,11 +131,9 @@ public class DBHandler implements IOHandler{
             weight = isInteger(athlete.getWeight()) ? Integer.toString((int) athlete.getWeight()) : Float.toString(athlete.getWeight());
         }
         personPartTwo = personPartTwo.concat(weight).concat(",");
-
-        personPartTwo = personPartTwo.concat(wrap(athlete.getTeam().getName())).concat(",");
+        personPartTwo = personPartTwo.concat(wrap(addDoubleQuotes(athlete.getTeam().getName()))).concat(",");
         personPartTwo = personPartTwo.concat(wrap(athlete.getTeam().getNoc())).concat(",");
 
-        //sortieren fehlt //Anzahl passt ned
         for(Participation participation : athlete.getParticipations()){
             entry = wrap(participation.getEvent().getGame().toString()).concat(",");
             entry = entry.concat(Integer.toString(participation.getEvent().getGame().getYear())).concat(",");

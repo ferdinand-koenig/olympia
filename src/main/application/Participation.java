@@ -1,8 +1,8 @@
 package main.application;
 
 public class Participation implements java.io.Serializable{
-    private int age;
-    private Event event;
+    private final int age;
+    private final Event event;
 
     public Participation(int age, Event event){
         this.age = age;

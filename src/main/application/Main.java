@@ -1,59 +1,108 @@
 package main.application;
 
+/*
 import java.util.HashMap;
 import java.util.Map;
 
 public class Main{
+    //Matrikelnummer.zip
+    //finalize vars
     //JavaDoc fehlt
     //Handling von exceptions
+    //Only adding new athletes
+    //beim einfügen auch kontrolle, ob die events/games schon bestehen
+    //ev. einige Variablen auf final, wenn sie sich nicht ändern
+    //Participation dennoch als innerclass? Umschreiben bei anderen Klassen -> ev in Konstruktot rein. Ganz am Ende
     public static void main(String[] args){
         IOHandler handler = new DBHandler();
         IOHandler serializer = new Serializer();
-        HashMap<Integer, Athlete> athletes = handler.read("C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\olympic.db");
+        HashMap<Integer, Athlete> athletes, newAthletes = new HashMap<>();
+
+        athletes = handler.read("C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\olympic.db");
         System.out.println("First Message");
         //HashMap<Integer, Athlete> athletes = serializer.read("C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\athletes.ser");
 
         for(Map.Entry<Integer, Athlete> athleteEntry : athletes.entrySet()){
             athleteEntry.getValue().debug();
         }
-
+        newAthletes.put(140000, new Athlete(140000, "Max Mustermann", "M", 184, 78, new Team("World", "WRD"), new Participation(24, new Event("Hallo", "Wettessen", new Game(2020, "Summer", "Stuttgart")))));
         //handler.write(athletes, "C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\olympia - Test.db");
-        serializer.write(athletes, "C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\athletes.ser");
+        serializer.write(newAthletes, "C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\athletes.ser");
+
+        System.out.println("newOne");
+        newAthletes= serializer.read("C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\athletes.ser");
+        for(Map.Entry<Integer, Athlete> athleteEntry : newAthletes.entrySet()){
+            athleteEntry.getValue().debug();
+        }
     }
 
+    /*
+        Fragen:
+            - Is JavaDoc also necessary at obvious functions like getAge()?
+                Nein, bei anderen schon (Getter und Setter nicht)
+            - Do we have to check validity of the db?
+                Invalider wird die Datenbank nicht
+            - Können sich Gewicht und Höhe ändern?
+                Ja
+            - Wenn Funktion nie null bekommt, dann abfangen?
+                Nein, muss man nicht
+     */
 
-}
 
-/*import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+//}
+
+
+import javafx.application.Application;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import java.util.HashMap;
 
-public class main.application.Main extends Application {
+public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Hello World!");
-        Button btn = new Button();
-        btn.setText("Say 'Hello World'");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
+    public void start(Stage stage) throws Exception {
+       Parent root = FXMLLoader.load(getClass().getResource("UI.fxml"));
 
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
-            }
-        });
+        Scene scene = new Scene(root, 800, 500);
 
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
-        primaryStage.setScene(new Scene(root, 300, 250));
-        primaryStage.show();
+        stage.setTitle("Athletes");
+        stage.setScene(scene);
+
+
+
+
+        IOHandler handler = new DBHandler();
+        HashMap<Integer, Athlete> athletes = new HashMap<>();
+
+        athletes = handler.read("C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\olympic.db");
+
+        /*final ObservableList<Athlete> data = FXCollections.observableArrayList();
+        data.addAll(athletes.values());*/
+
+        fillTable(athletes, scene);
+
+        stage.show();
+    }
+
+    private void fillTable(HashMap<Integer, Athlete> athletes, Scene scene){
+        TableView table = (TableView) scene.lookup("#table");
+
+        TableColumn idColumn = (TableColumn) table.getColumns().get(0);
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        TableColumn nameColumn = (TableColumn) table.getColumns().get(1);
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        TableColumn<Athlete, String> teamColumn = (TableColumn) table.getColumns().get(2);
+        teamColumn.setCellValueFactory(new PropertyValueFactory<>("team"));
+        teamColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getTeam().getName()));
+        table.getItems().addAll(athletes.values());
     }
 }
-*/
