@@ -87,7 +87,7 @@ public class AthleteViewController {
         titleColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().participation.getEvent().getTitle()));
         TableColumn<ParticipationListElement, String> sportColumn = new TableColumn<>("Sport");
         sportColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().participation.getEvent().getSport()));
-        TableColumn<ParticipationListElement, String> gameColumn = new TableColumn<>("Sport");
+        TableColumn<ParticipationListElement, String> gameColumn = new TableColumn<>("Game");
         gameColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().participation.getEvent().getGame().toString()));
         TableColumn<ParticipationListElement, String> medalColumn = new TableColumn<>("Medal");
         medalColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().medalString()));

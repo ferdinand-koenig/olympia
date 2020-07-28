@@ -96,9 +96,10 @@ public class Main extends Application {
         data.addAll(athletes.values());*/
 
         Button addBtn = (Button) scene.lookup("#addBtn");
+        HashMap<Integer, Athlete> finalAthletes = athletes;
         addBtn.setOnMouseClicked(event -> {
             if(event.getButton()== MouseButton.PRIMARY){
-                showAddMenu(primaryStage);
+                showAddMenu(primaryStage, finalAthletes);
             }
         });
 
@@ -127,7 +128,7 @@ public class Main extends Application {
         return filteredAthletes;
     }
 
-    private void fillTable(FilteredList athletes, TableView table){
+    protected static void fillTable(FilteredList athletes, TableView table){
         TableColumn idColumn = (TableColumn) table.getColumns().get(0);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         TableColumn nameColumn = (TableColumn) table.getColumns().get(1);
@@ -152,7 +153,7 @@ public class Main extends Application {
         });
     }
 
-    private void showAddMenu(Stage owner){
+    private void showAddMenu(Stage owner, HashMap<Integer, Athlete> athletes){
         try{
             Stage addMenu = new Stage();
             Scene addScene = new Scene(FXMLLoader.load(AthleteViewController.class.getResource("AddPopUp.fxml")), 300, 100);
@@ -168,7 +169,8 @@ public class Main extends Application {
 
             addEventBtn.setOnMouseClicked(event -> {
                 if(event.getButton() == MouseButton.PRIMARY){
-                    //showAddMenu();
+                    addMenu.close();
+                    AddEventController.showEntryForm(owner, athletes);
                 }
             });
 
