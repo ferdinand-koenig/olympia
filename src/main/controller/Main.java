@@ -53,24 +53,23 @@ public class Main{
 
 
 import javafx.application.Application;
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import main.application.Athlete;
 import main.application.DBHandler;
 import main.application.IOHandler;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -80,13 +79,13 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage primaryStage) throws Exception {
        Parent root = FXMLLoader.load(getClass().getResource("UI.fxml"));
 
         Scene scene = new Scene(root, 800, 500);
 
-        stage.setTitle("Athletes");
-        stage.setScene(scene);
+        primaryStage.setTitle("Athletes");
+        primaryStage.setScene(scene);
 
 
         IOHandler handler = new DBHandler();
@@ -97,8 +96,9 @@ public class Main extends Application {
         /*final ObservableList<Athlete> data = FXCollections.observableArrayList();
         data.addAll(athletes.values());*/
 
+        addListenerToTableItems((TableView) scene.lookup("#table"), primaryStage);
         fillTable(filterAthletes(athletes, (TextField) scene.lookup("#searchBar")), (TableView) scene.lookup("#table"));
-        stage.show();
+        primaryStage.show();
     }
 
     private FilteredList<Athlete> filterAthletes(HashMap<Integer, Athlete> athletes, TextField searchBar){
@@ -129,6 +129,21 @@ public class Main extends Application {
         TableColumn<Athlete, String> teamColumn = (TableColumn) table.getColumns().get(2);
         teamColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getTeam().getName()));
         table.setItems(athletes);
+    }
+
+    private void addListenerToTableItems(TableView table, Stage primaryStage){
+        table.setRowFactory(tv -> {
+            TableRow<Athlete> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (! row.isEmpty() && event.getButton()== MouseButton.PRIMARY
+                        && event.getClickCount() == 2) {
+
+                    Athlete clickedAthlete = row.getItem();
+                    AthleteViewController.showAthlete(clickedAthlete, primaryStage);
+                }
+            });
+            return row ;
+        });
     }
 
 
