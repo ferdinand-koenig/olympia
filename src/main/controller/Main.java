@@ -1,4 +1,4 @@
-package main.application;
+package main.controller;
 
 /*
 import java.util.HashMap;
@@ -53,15 +53,26 @@ public class Main{
 
 
 import javafx.application.Application;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import java.util.HashMap;
+import main.application.Athlete;
+import main.application.DBHandler;
+import main.application.IOHandler;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
 
 public class Main extends Application {
     public static void main(String[] args) {
@@ -78,8 +89,6 @@ public class Main extends Application {
         stage.setScene(scene);
 
 
-
-
         IOHandler handler = new DBHandler();
         HashMap<Integer, Athlete> athletes = new HashMap<>();
 
@@ -88,21 +97,39 @@ public class Main extends Application {
         /*final ObservableList<Athlete> data = FXCollections.observableArrayList();
         data.addAll(athletes.values());*/
 
-        fillTable(athletes, scene);
-
+        fillTable(filterAthletes(athletes, (TextField) scene.lookup("#searchBar")), (TableView) scene.lookup("#table"));
         stage.show();
     }
 
-    private void fillTable(HashMap<Integer, Athlete> athletes, Scene scene){
-        TableView table = (TableView) scene.lookup("#table");
+    private FilteredList<Athlete> filterAthletes(HashMap<Integer, Athlete> athletes, TextField searchBar){
+        ObservableList<Athlete> observableAthleteList = FXCollections.observableArrayList();
+        observableAthleteList.addAll(athletes.values());
+        FilteredList<Athlete> filteredAthletes = new FilteredList<>(observableAthleteList, p -> true);
 
+        searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredAthletes.setPredicate(person -> {
+                if (newValue == null || newValue.isEmpty())
+                    return true;
+                if (person.getName().toLowerCase().contains(newValue.toLowerCase()))
+                    return true;
+                if(Integer.toString(person.getId()).contains(newValue))
+                    return true;
+                return false;
+            });
+        });
+
+        return filteredAthletes;
+    }
+
+    private void fillTable(FilteredList athletes, TableView table){
         TableColumn idColumn = (TableColumn) table.getColumns().get(0);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         TableColumn nameColumn = (TableColumn) table.getColumns().get(1);
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         TableColumn<Athlete, String> teamColumn = (TableColumn) table.getColumns().get(2);
-        teamColumn.setCellValueFactory(new PropertyValueFactory<>("team"));
         teamColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getTeam().getName()));
-        table.getItems().addAll(athletes.values());
+        table.setItems(athletes);
     }
+
+
 }
