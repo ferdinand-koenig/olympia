@@ -57,13 +57,11 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
@@ -71,6 +69,7 @@ import main.application.Athlete;
 import main.application.DBHandler;
 import main.application.IOHandler;
 
+import java.io.IOException;
 import java.util.*;
 
 public class Main extends Application {
@@ -95,6 +94,13 @@ public class Main extends Application {
 
         /*final ObservableList<Athlete> data = FXCollections.observableArrayList();
         data.addAll(athletes.values());*/
+
+        Button addBtn = (Button) scene.lookup("#addBtn");
+        addBtn.setOnMouseClicked(event -> {
+            if(event.getButton()== MouseButton.PRIMARY){
+                showAddMenu(primaryStage);
+            }
+        });
 
         addListenerToTableItems((TableView) scene.lookup("#table"), primaryStage);
         fillTable(filterAthletes(athletes, (TextField) scene.lookup("#searchBar")), (TableView) scene.lookup("#table"));
@@ -146,5 +152,33 @@ public class Main extends Application {
         });
     }
 
+    private void showAddMenu(Stage owner){
+        try{
+            Stage addMenu = new Stage();
+            Scene addScene = new Scene(FXMLLoader.load(AthleteViewController.class.getResource("AddPopUp.fxml")), 300, 100);
+            addMenu.setScene(addScene);
+            Button addAthleteBtn = (Button) addScene.lookup("#addAthleteBtn");
+            Button addEventBtn = (Button) addScene.lookup("#addEventBtn");
 
+            addAthleteBtn.setOnMouseClicked(event -> {
+                if(event.getButton() == MouseButton.PRIMARY){
+                    //showAddMenu();
+                }
+            });
+
+            addEventBtn.setOnMouseClicked(event -> {
+                if(event.getButton() == MouseButton.PRIMARY){
+                    //showAddMenu();
+                }
+            });
+
+            addMenu.setTitle("Add...");
+            addMenu.initOwner(owner);
+            addMenu.setResizable(false);
+            addMenu.showAndWait();
+        }catch(IOException e){
+            System.err.println("Fatal: Cannot find AddPopUp.fxml");
+            e.printStackTrace();
+        }
+    }
 }

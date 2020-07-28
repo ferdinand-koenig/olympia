@@ -23,7 +23,10 @@
                   <Button mnemonicParsing="false" text="Button" />
                </children>
             </HBox>
-            <HBox layoutX="210.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0" />
+            <HBox alignment="TOP_RIGHT" layoutX="210.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="addBtn" mnemonicParsing="false" text="Add" />
+               </children></HBox>
          </children>
       </HBox>
    </top>
