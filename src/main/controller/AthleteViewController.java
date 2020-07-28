@@ -1,7 +1,14 @@
 package main.controller;
 
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -9,10 +16,27 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import main.application.Athlete;
+import main.application.Medal;
+import main.application.Participation;
+
 import java.io.IOException;
 
 public class AthleteViewController {
-    public static void showAthlete(Athlete athlete, Stage owner){
+    private static class ParticipationListElement{
+        private Participation participation;
+        private Medal medal;
+
+        ParticipationListElement(Participation participation, Medal medal){
+            this.participation=participation;
+            this.medal=medal;
+        }
+
+        private String medalString(){
+            return medal == null ? "-" : String.valueOf(medal.getValue());
+        }
+    }
+
+    public void showAthlete(Athlete athlete, Stage owner){
         try {
             Scene athleteScene = new Scene(FXMLLoader.load(AthleteViewController.class.getResource("AthleteView.fxml")));
             Stage athleteView = new Stage();
@@ -37,7 +61,7 @@ public class AthleteViewController {
         }
     }
 
-    private static void populateGeneralTab(Athlete athlete, Scene athleteScene){
+    private void populateGeneralTab(Athlete athlete, Scene athleteScene){
         Text idText, sexText, heightText, weightText, teamText;
         idText = new Text(Integer.toString(athlete.getId()));
         sexText = new Text(athlete.getSex());
@@ -53,7 +77,20 @@ public class AthleteViewController {
         detailsGridPane.add(teamText, 1,4);
     }
 
-    private static void populateParticipationTab(Athlete athlete, Scene athleteScene){
+    private void populateParticipationTab(Athlete athlete, Scene athleteScene){
+        ObservableList<ParticipationListElement> observableParticipationList = FXCollections.observableArrayList();
+        for(Participation participation : athlete.getParticipations())
+                observableParticipationList.add(new ParticipationListElement(participation, athlete.wonMedalFor(participation.getEvent())));
 
+        TableView table = (TableView) athleteScene.lookup("#participationTable");
+        TableColumn<ParticipationListElement, String> ageColumn = (TableColumn) table.getColumns().get(0);
+        ageColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(Integer.toString(param.getValue().participation.getAge())));
+        TableColumn<ParticipationListElement, String> titleColumn = (TableColumn) athleteScene.lookup("#titleColumn");
+        titleColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().participation.getEvent().getTitle()));
+        sportColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().participation.getEvent().getSport()));
+        gameColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().participation.getEvent().getGame().toString()));
+        TableColumn<ParticipationListElement, String> medalColumn = (TableColumn) table.getColumns().get(2);
+        medalColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().medalString()));
+        table.setItems(observableParticipationList);
     }
 }

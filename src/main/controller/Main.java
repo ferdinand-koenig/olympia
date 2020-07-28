@@ -139,7 +139,7 @@ public class Main extends Application {
                         && event.getClickCount() == 2) {
 
                     Athlete clickedAthlete = row.getItem();
-                    AthleteViewController.showAthlete(clickedAthlete, primaryStage);
+                    (new AthleteViewController()).showAthlete(clickedAthlete, primaryStage);
                 }
             });
             return row ;
