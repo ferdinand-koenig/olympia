@@ -1,7 +1,7 @@
 package main.application;
 
 public class Medal implements java.io.Serializable{
-    enum Value{
+    public enum Value{
         GOLD,
         SILVER,
         BRONZE;

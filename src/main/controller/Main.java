@@ -57,13 +57,11 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
@@ -71,6 +69,7 @@ import main.application.Athlete;
 import main.application.DBHandler;
 import main.application.IOHandler;
 
+import java.io.IOException;
 import java.util.*;
 
 public class Main extends Application {
@@ -96,12 +95,27 @@ public class Main extends Application {
         /*final ObservableList<Athlete> data = FXCollections.observableArrayList();
         data.addAll(athletes.values());*/
 
+        Button addBtn = (Button) scene.lookup("#addBtn");
+        HashMap<Integer, Athlete> finalAthletes = athletes;
+        addBtn.setOnMouseClicked(event -> {
+            if(event.getButton()== MouseButton.PRIMARY){
+                showAddMenu(primaryStage, finalAthletes, scene);
+            }
+        });
+
+        Button advSearchBtn = (Button) scene.lookup("#advSearchBtn");
+        advSearchBtn.setOnMouseClicked(event -> {
+            if(event.getButton()== MouseButton.PRIMARY) {
+                SearchController.showSearchScene(finalAthletes, primaryStage);
+            }
+        });
+
         addListenerToTableItems((TableView) scene.lookup("#table"), primaryStage);
         fillTable(filterAthletes(athletes, (TextField) scene.lookup("#searchBar")), (TableView) scene.lookup("#table"));
         primaryStage.show();
     }
 
-    private FilteredList<Athlete> filterAthletes(HashMap<Integer, Athlete> athletes, TextField searchBar){
+    private static FilteredList<Athlete> filterAthletes(HashMap<Integer, Athlete> athletes, TextField searchBar){
         ObservableList<Athlete> observableAthleteList = FXCollections.observableArrayList();
         observableAthleteList.addAll(athletes.values());
         FilteredList<Athlete> filteredAthletes = new FilteredList<>(observableAthleteList, p -> true);
@@ -121,7 +135,7 @@ public class Main extends Application {
         return filteredAthletes;
     }
 
-    private void fillTable(FilteredList athletes, TableView table){
+    protected static void fillTable(FilteredList athletes, TableView table){
         TableColumn idColumn = (TableColumn) table.getColumns().get(0);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         TableColumn nameColumn = (TableColumn) table.getColumns().get(1);
@@ -131,7 +145,7 @@ public class Main extends Application {
         table.setItems(athletes);
     }
 
-    private void addListenerToTableItems(TableView table, Stage primaryStage){
+    private static void addListenerToTableItems(TableView table, Stage primaryStage){
         table.setRowFactory(tv -> {
             TableRow<Athlete> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -146,5 +160,40 @@ public class Main extends Application {
         });
     }
 
+    private static void showAddMenu(Stage owner, HashMap<Integer, Athlete> athletes, Scene rootScene){
+        try{
+            Stage addMenu = new Stage();
+            Scene addScene = new Scene(FXMLLoader.load(AthleteViewController.class.getResource("AddPopUp.fxml")), 300, 100);
+            addMenu.setScene(addScene);
+            Button addAthleteBtn = (Button) addScene.lookup("#addAthleteBtn");
+            Button addEventBtn = (Button) addScene.lookup("#addEventBtn");
 
+            addAthleteBtn.setOnMouseClicked(event -> {
+                if(event.getButton() == MouseButton.PRIMARY){
+                    addMenu.close();
+                    AddAthleteController.showEntryForm(owner, athletes, rootScene);
+                }
+            });
+
+            addEventBtn.setOnMouseClicked(event -> {
+                if(event.getButton() == MouseButton.PRIMARY){
+                    addMenu.close();
+                    AddEventController.showEntryForm(owner, athletes);
+                }
+            });
+
+            addMenu.setTitle("Add...");
+            addMenu.initOwner(owner);
+            addMenu.setResizable(false);
+            addMenu.showAndWait();
+        }catch(IOException e){
+            System.err.println("Fatal: Cannot find AddPopUp.fxml");
+            e.printStackTrace();
+        }
+    }
+
+    protected static void updateAthleteTable(HashMap<Integer, Athlete> athletes, Scene scene){
+        ((TableView) scene.lookup("#table")).setItems(filterAthletes(athletes, (TextField) scene.lookup("#searchBar")));
+        ((TableView) scene.lookup("#table")).refresh();
+    }
 }

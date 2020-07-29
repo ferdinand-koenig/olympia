@@ -3,8 +3,6 @@ package main.controller;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
@@ -83,14 +81,20 @@ public class AthleteViewController {
                 observableParticipationList.add(new ParticipationListElement(participation, athlete.wonMedalFor(participation.getEvent())));
 
         TableView table = (TableView) athleteScene.lookup("#participationTable");
-        TableColumn<ParticipationListElement, String> ageColumn = (TableColumn) table.getColumns().get(0);
+        TableColumn<ParticipationListElement, String> ageColumn = new TableColumn<>("Age");
         ageColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(Integer.toString(param.getValue().participation.getAge())));
-        TableColumn<ParticipationListElement, String> titleColumn = (TableColumn) athleteScene.lookup("#titleColumn");
+        TableColumn<ParticipationListElement, String> titleColumn = new TableColumn<>("Title");
         titleColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().participation.getEvent().getTitle()));
+        TableColumn<ParticipationListElement, String> sportColumn = new TableColumn<>("Sport");
         sportColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().participation.getEvent().getSport()));
+        TableColumn<ParticipationListElement, String> gameColumn = new TableColumn<>("Game");
         gameColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().participation.getEvent().getGame().toString()));
-        TableColumn<ParticipationListElement, String> medalColumn = (TableColumn) table.getColumns().get(2);
+        TableColumn<ParticipationListElement, String> medalColumn = new TableColumn<>("Medal");
         medalColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().medalString()));
+
+        TableColumn<ParticipationListElement, String> eventColumn = new TableColumn<>("Event");
+        eventColumn.getColumns().addAll(titleColumn, sportColumn, gameColumn);
+        table.getColumns().addAll(ageColumn, eventColumn, medalColumn);
         table.setItems(observableParticipationList);
     }
 }
