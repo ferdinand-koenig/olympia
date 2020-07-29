@@ -24,4 +24,8 @@ public class Team implements java.io.Serializable{
         this.noc = noc;
     }
 
+    @Override
+    public String toString(){
+        return name.concat(" (").concat(noc).concat(")");
+    }
 }

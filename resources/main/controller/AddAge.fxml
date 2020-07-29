@@ -22,12 +22,15 @@
          <GridPane.margin>
             <Insets right="10.0" />
          </GridPane.margin></Label>
-      <Spinner fx:id="ageSpinner" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <Spinner fx:id="ageSpinner" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
            <valueFactory>
                <SpinnerValueFactory.IntegerSpinnerValueFactory max="99" min="0" />
            </valueFactory>
        </Spinner>
-      <Button fx:id="submitBtn" mnemonicParsing="false" text="Add Age" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+      <Button fx:id="submitBtn" mnemonicParsing="false" text="Add Age" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin></Button>
       <Label text="Medal" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets right="10.0" />

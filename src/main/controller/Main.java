@@ -99,7 +99,14 @@ public class Main extends Application {
         HashMap<Integer, Athlete> finalAthletes = athletes;
         addBtn.setOnMouseClicked(event -> {
             if(event.getButton()== MouseButton.PRIMARY){
-                showAddMenu(primaryStage, finalAthletes);
+                showAddMenu(primaryStage, finalAthletes, scene);
+            }
+        });
+
+        Button advSearchBtn = (Button) scene.lookup("#advSearchBtn");
+        advSearchBtn.setOnMouseClicked(event -> {
+            if(event.getButton()== MouseButton.PRIMARY) {
+                SearchController.showSearchScene(finalAthletes, primaryStage);
             }
         });
 
@@ -108,7 +115,7 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    private FilteredList<Athlete> filterAthletes(HashMap<Integer, Athlete> athletes, TextField searchBar){
+    private static FilteredList<Athlete> filterAthletes(HashMap<Integer, Athlete> athletes, TextField searchBar){
         ObservableList<Athlete> observableAthleteList = FXCollections.observableArrayList();
         observableAthleteList.addAll(athletes.values());
         FilteredList<Athlete> filteredAthletes = new FilteredList<>(observableAthleteList, p -> true);
@@ -138,7 +145,7 @@ public class Main extends Application {
         table.setItems(athletes);
     }
 
-    private void addListenerToTableItems(TableView table, Stage primaryStage){
+    private static void addListenerToTableItems(TableView table, Stage primaryStage){
         table.setRowFactory(tv -> {
             TableRow<Athlete> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -153,7 +160,7 @@ public class Main extends Application {
         });
     }
 
-    private void showAddMenu(Stage owner, HashMap<Integer, Athlete> athletes){
+    private static void showAddMenu(Stage owner, HashMap<Integer, Athlete> athletes, Scene rootScene){
         try{
             Stage addMenu = new Stage();
             Scene addScene = new Scene(FXMLLoader.load(AthleteViewController.class.getResource("AddPopUp.fxml")), 300, 100);
@@ -163,7 +170,8 @@ public class Main extends Application {
 
             addAthleteBtn.setOnMouseClicked(event -> {
                 if(event.getButton() == MouseButton.PRIMARY){
-                    //showAddMenu();
+                    addMenu.close();
+                    AddAthleteController.showEntryForm(owner, athletes, rootScene);
                 }
             });
 
@@ -182,5 +190,10 @@ public class Main extends Application {
             System.err.println("Fatal: Cannot find AddPopUp.fxml");
             e.printStackTrace();
         }
+    }
+
+    protected static void updateAthleteTable(HashMap<Integer, Athlete> athletes, Scene scene){
+        ((TableView) scene.lookup("#table")).setItems(filterAthletes(athletes, (TextField) scene.lookup("#searchBar")));
+        ((TableView) scene.lookup("#table")).refresh();
     }
 }

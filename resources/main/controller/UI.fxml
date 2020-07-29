@@ -20,7 +20,7 @@
             <HBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
                <children>
                   <TextField fx:id="searchBar" promptText="search for ID/name" />
-                  <Button mnemonicParsing="false" text="Button" />
+                  <Button fx:id="advSearchBtn" mnemonicParsing="false" prefHeight="26.0" prefWidth="88.0" text="Advanced" />
                </children>
             </HBox>
             <HBox alignment="TOP_RIGHT" layoutX="210.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">

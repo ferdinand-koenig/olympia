@@ -31,6 +31,8 @@
          <GridPane.margin>
             <Insets right="10.0" />
          </GridPane.margin></Label>
+      <TextField fx:id="titleTextField" GridPane.columnIndex="1" />
+      <TextField fx:id="sportTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <GridPane GridPane.columnIndex="1" GridPane.rowIndex="2">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="180.0" minWidth="10.0" prefWidth="71.99999237060547" />
@@ -55,12 +57,10 @@
                   <Insets right="10.0" />
                </GridPane.margin></Label>
             <TextField fx:id="yearTextField" GridPane.columnIndex="1" />
-            <TextField fx:id="cityTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <ComboBox fx:id="seasonComboBox" prefHeight="26.0" prefWidth="318.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="cityTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
       </GridPane>
-      <TextField fx:id="titleTextField" GridPane.columnIndex="1" />
-      <TextField fx:id="sportTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <Button fx:id="submitBtn" mnemonicParsing="false" prefHeight="26.0" prefWidth="128.0" text="Choose Athletes" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
    </children>
    <padding>

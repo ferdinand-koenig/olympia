@@ -18,7 +18,7 @@ public class Athlete implements java.io.Serializable{
         setName(name);
         setSex(sex);
         setTeam(team);
-        addParticipation(participation);
+        if(participation != null) addParticipation(participation);
     }
 
     public int getId() {
