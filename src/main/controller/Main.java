@@ -53,17 +53,12 @@ public class Main{
 
 
 import javafx.application.Application;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import main.application.Athlete;
 import main.application.DBHandler;
@@ -81,7 +76,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
        Parent root = FXMLLoader.load(getClass().getResource("UI.fxml"));
 
-        Scene scene = new Scene(root, 800, 500);
+        Scene scene = new Scene(root, 700, 500);
 
         primaryStage.setTitle("Athletes");
         primaryStage.setScene(scene);
@@ -91,9 +86,6 @@ public class Main extends Application {
         HashMap<Integer, Athlete> athletes = new HashMap<>();
 
         athletes = handler.read("C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\olympic.db");
-
-        /*final ObservableList<Athlete> data = FXCollections.observableArrayList();
-        data.addAll(athletes.values());*/
 
         Button addBtn = (Button) scene.lookup("#addBtn");
         HashMap<Integer, Athlete> finalAthletes = athletes;
@@ -110,39 +102,11 @@ public class Main extends Application {
             }
         });
 
+        ControllerUtilities.fillTextFlow((TextFlow) scene.lookup("#hintTextFlow"), "Hint: Double-click on athlete for more details", 10);
+
         addListenerToTableItems((TableView) scene.lookup("#table"), primaryStage);
-        fillTable(filterAthletes(athletes, (TextField) scene.lookup("#searchBar")), (TableView) scene.lookup("#table"));
+        ControllerUtilities.fillTable(ControllerUtilities.filterAthletes(athletes, (TextField) scene.lookup("#searchBar")), (TableView) scene.lookup("#table"));
         primaryStage.show();
-    }
-
-    private static FilteredList<Athlete> filterAthletes(HashMap<Integer, Athlete> athletes, TextField searchBar){
-        ObservableList<Athlete> observableAthleteList = FXCollections.observableArrayList();
-        observableAthleteList.addAll(athletes.values());
-        FilteredList<Athlete> filteredAthletes = new FilteredList<>(observableAthleteList, p -> true);
-
-        searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredAthletes.setPredicate(person -> {
-                if (newValue == null || newValue.isEmpty())
-                    return true;
-                if (person.getName().toLowerCase().contains(newValue.toLowerCase()))
-                    return true;
-                if(Integer.toString(person.getId()).contains(newValue))
-                    return true;
-                return false;
-            });
-        });
-
-        return filteredAthletes;
-    }
-
-    protected static void fillTable(FilteredList athletes, TableView table){
-        TableColumn idColumn = (TableColumn) table.getColumns().get(0);
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        TableColumn nameColumn = (TableColumn) table.getColumns().get(1);
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        TableColumn<Athlete, String> teamColumn = (TableColumn) table.getColumns().get(2);
-        teamColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getTeam().getName()));
-        table.setItems(athletes);
     }
 
     private static void addListenerToTableItems(TableView table, Stage primaryStage){
@@ -190,10 +154,5 @@ public class Main extends Application {
             System.err.println("Fatal: Cannot find AddPopUp.fxml");
             e.printStackTrace();
         }
-    }
-
-    protected static void updateAthleteTable(HashMap<Integer, Athlete> athletes, Scene scene){
-        ((TableView) scene.lookup("#table")).setItems(filterAthletes(athletes, (TextField) scene.lookup("#searchBar")));
-        ((TableView) scene.lookup("#table")).refresh();
     }
 }

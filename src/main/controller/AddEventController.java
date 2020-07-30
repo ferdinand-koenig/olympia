@@ -2,13 +2,9 @@ package main.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -19,7 +15,6 @@ import main.application.*;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 public class AddEventController {
     public static void showEntryForm(Stage owner, HashMap<Integer, Athlete> athletes){
@@ -80,12 +75,7 @@ public class AddEventController {
                 }
             });
 
-            TextFlow headText = (TextFlow) ageEntryScene.lookup("#messageTextFlow");
-            Text athleteName = new Text("Input Age for: ".concat(athlete.getName()));
-            athleteName.setFont(Font.font("Verdana", 25));
-            athleteName.setTextAlignment(TextAlignment.CENTER);
-            headText.getChildren().add(athleteName);
-            headText.setTextAlignment(TextAlignment.CENTER);
+            ControllerUtilities.fillTextFlow((TextFlow) ageEntryScene.lookup("#messageTextFlow"), "Input Age for: ".concat(athlete.getName()), 25);
 
             ComboBox<String> medalComboBox = (ComboBox) ageEntryScene.lookup("#medalComboBox");
             ObservableList<String> medalValues = FXCollections.observableArrayList();
@@ -127,19 +117,23 @@ public class AddEventController {
             Scene athleteSelectionScene = new Scene(FXMLLoader.load(AddEventController.class.getResource("AddAthletesToEvent.fxml")));
 
             TableView table = (TableView) athleteSelectionScene.lookup("#table");
-            Main.fillTable(new FilteredList(FXCollections.observableArrayList(athletes.values())), table);
+            ControllerUtilities.fillTable(ControllerUtilities.filterAthletes(athletes, (TextField) athleteSelectionScene.lookup("#searchBar")), table);
             table.getSelectionModel().setSelectionMode(
                     SelectionMode.MULTIPLE
             );
+
+            ControllerUtilities.fillTextFlow((TextFlow) athleteSelectionScene.lookup("#instructionTextFlow"),
+                    "Choose now the athletes participated in the event.\n" + "Use 'Ctrl' to select more than one.",
+                    20);
 
             Button submitBtn = (Button) athleteSelectionScene.lookup("#submitBtn");
             submitBtn.setOnMouseClicked(evt -> {
                 if(evt.getButton() == MouseButton.PRIMARY){
                     ObservableList<Athlete> selectedAthletes = table.getSelectionModel().getSelectedItems();
                     if(!selectedAthletes.isEmpty()){
-                       selectedAthletes.forEach(athlete -> {
-                           getAgeAndAddParticipation(athlete, event, stage);
-                       });
+                       selectedAthletes.forEach(athlete ->
+                           getAgeAndAddParticipation(athlete, event, stage)
+                       );
                        stage.close();
                     }
                 }

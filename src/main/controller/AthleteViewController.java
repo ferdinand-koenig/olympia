@@ -8,9 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import main.application.Athlete;
@@ -39,12 +37,7 @@ public class AthleteViewController {
             Scene athleteScene = new Scene(FXMLLoader.load(AthleteViewController.class.getResource("AthleteView.fxml")));
             Stage athleteView = new Stage();
 
-            TextFlow headText = (TextFlow) athleteScene.lookup("#nameTextFlow");
-            Text athleteName = new Text(athlete.getName());
-            athleteName.setFont(Font.font("Verdana", 25));
-            athleteName.setTextAlignment(TextAlignment.CENTER);
-            headText.getChildren().add(athleteName);
-            headText.setTextAlignment(TextAlignment.CENTER);
+            ControllerUtilities.fillTextFlow((TextFlow) athleteScene.lookup("#nameTextFlow"), athlete.getName(), 25);
 
             populateGeneralTab(athlete, athleteScene);
             populateParticipationTab(athlete, athleteScene);

@@ -3,8 +3,9 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <center>
         <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <columns>
@@ -14,9 +15,6 @@
             </columns>
         </TableView>
     </center>
-   <top>
-      <TextField prefHeight="43.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
-   </top>
    <bottom>
       <Button fx:id="submitBtn" mnemonicParsing="false" text="Add Age" BorderPane.alignment="CENTER_RIGHT">
          <BorderPane.margin>
@@ -24,4 +22,16 @@
          </BorderPane.margin>
       </Button>
    </bottom>
+   <top>
+      <BorderPane prefHeight="105.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <top>
+            <TextFlow fx:id="instructionTextFlow" prefHeight="67.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+         </top>
+         <left>
+            <TextField fx:id="searchBar" promptText="Search for ID/name" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets left="10.0" />
+               </BorderPane.margin></TextField>
+         </left></BorderPane>
+   </top>
 </BorderPane>

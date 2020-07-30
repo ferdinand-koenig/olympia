@@ -1,16 +1,12 @@
 package main.controller;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import main.application.Athlete;
 
@@ -62,12 +58,6 @@ public class SearchController {
                     list.setItems(filterList(entries, (TextField) searchScene.lookup("#searchBar")));
                 }
             );
-
-            /*
-            Analog zu der Athletenanzeige sollen auch Teams (Suche nach Namen), Sportarten (Suche
-nach Namen), Events (Suche nach Namen) und Olympische Spiele (Suche nach Jahreszahl)
-angezeigt werden können.
-             */
 
             stage.setTitle("Advanced Search");
             stage.setScene(searchScene);

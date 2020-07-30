@@ -42,7 +42,7 @@ public class AddAthleteController {
             Spinner<Double> weightSpinner = ((Spinner<Double>) formScene.lookup("#weightSpinner"));
             weightSpinner.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
                 try{
-                    if(0.0 > Double.parseDouble(newValue) || 500.0 < Double.parseDouble(newValue))
+                    if(0.0 > Double.parseDouble(newValue.replace(",", ".")) || 500.0 < Double.parseDouble(newValue.replace(",",".")))
                         weightSpinner.getEditor().textProperty().set(oldValue);
                 }catch(Exception e){
                     weightSpinner.getEditor().textProperty().set(oldValue);
@@ -59,9 +59,9 @@ public class AddAthleteController {
                             getEventAndCreateAthlete(
                                     ((TextField) formScene.lookup("#nameTextField")).getText(),
                                     sexComboBox.getValue(),
-                                    ((Spinner<Integer>) heightSpinner).getValue().intValue(),
+                                    heightSpinner.getValue().intValue(),
                                     weightSpinner.getValue().floatValue(),
-                                    new Team(((TextField) formScene.lookup("#teamTextField")).getText(), ((TextField) formScene.lookup("#nocTextField")).getText()),
+                                    new Team(((TextField) formScene.lookup("#teamTextField")).getText(), ((TextField) formScene.lookup("#nocTextField")).getText().toUpperCase()),
                                     athletes,
                                     formView,
                                     rootScene);
@@ -91,6 +91,7 @@ public class AddAthleteController {
             seasonComboBox.getSelectionModel().selectFirst();
 
             Button submitBtn = (Button) formScene.lookup("#submitBtn");
+            submitBtn.setText("Next");
             submitBtn.setOnMouseClicked(event -> {
                 if(event.getButton() == MouseButton.PRIMARY){
                     try {
@@ -105,7 +106,8 @@ public class AddAthleteController {
                     AddEventController.getAgeAndAddParticipation(incompleteAthlete, AddEventController.submitEntryForm(formScene), stage);
 
                     athletes.put(nextFreeKey, incompleteAthlete);
-                    Main.updateAthleteTable(athletes, rootScene);
+                    ControllerUtilities.updateAthleteTable(athletes, rootScene);
+                    stage.close();
                 }
             });
 
