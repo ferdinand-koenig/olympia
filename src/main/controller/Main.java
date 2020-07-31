@@ -57,14 +57,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.text.TextFlow;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.application.Athlete;
 import main.application.DBHandler;
 import main.application.IOHandler;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -82,24 +88,38 @@ public class Main extends Application {
         primaryStage.setTitle("Athletes");
         primaryStage.setScene(scene);
 
+        primaryStage.getIcons().add(new Image("https://img.icons8.com/officexs/72/athlete.png"));
+        primaryStage.setResizable(false);
+        primaryStage.show();
 
         IOHandler handler = new DBHandler();
         HashMap<Integer, Athlete> athletes;
+        File db;
 
-        athletes = handler.read("C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\olympic.db");
+        athletes = ((db = loadFile(primaryStage)) == null) ? new HashMap<>() : handler.read(db.getPath());
+        //athletes = handler.read("C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\olympic.db");
 
         Button addBtn = (Button) scene.lookup("#addBtn");
-        HashMap<Integer, Athlete> finalAthletes = athletes;
         addBtn.setOnMouseClicked(event -> {
             if(event.getButton()== MouseButton.PRIMARY){
-                showAddMenu(primaryStage, finalAthletes, scene);
+                showAddMenu(primaryStage, athletes, scene);
             }
         });
 
         Button advSearchBtn = (Button) scene.lookup("#advSearchBtn");
         advSearchBtn.setOnMouseClicked(event -> {
             if(event.getButton()== MouseButton.PRIMARY) {
-                SearchController.showSearchScene(finalAthletes, primaryStage);
+                SearchController.showSearchScene(athletes, primaryStage);
+            }
+        });
+
+        Button saveBtn = (Button) scene.lookup("#saveBtn");
+        saveBtn.setOnMouseClicked(event -> {
+            if(event.getButton() == MouseButton.PRIMARY) {
+                File file;
+                if((file = saveFile(primaryStage)) == null)
+                    return;
+                handler.write(athletes, file.getPath());
             }
         });
 
@@ -107,10 +127,6 @@ public class Main extends Application {
 
         addListenerToTableItems((TableView) scene.lookup("#table"), primaryStage);
         ControllerUtilities.fillTable(ControllerUtilities.filterAthletes(athletes, (TextField) scene.lookup("#searchBar")), (TableView) scene.lookup("#table"));
-
-        primaryStage.getIcons().add(new Image("https://img.icons8.com/officexs/72/athlete.png"));
-        primaryStage.setResizable(false);
-        primaryStage.show();
     }
 
     private static void addListenerToTableItems(TableView table, Stage primaryStage){
@@ -158,5 +174,23 @@ public class Main extends Application {
             System.err.println("Fatal: Cannot find AddPopUp.fxml");
             e.printStackTrace();
         }
+    }
+
+    private static File loadFile(Stage owner){ //FX filechooser
+        final FileChooser fc = new FileChooser();
+        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(
+                "CSV database (*.csv, *.db)", "*.csv", "*.db");
+        fc.getExtensionFilters().add(filter);
+        fc.setTitle("Choose an athlete database");
+        return fc.showOpenDialog(owner);
+    }
+
+    private static File saveFile(Stage owner){
+        final FileChooser fc = new FileChooser();
+        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(
+                "CSV database (*.csv, *.db)", "*.csv", "*.db");
+        fc.getExtensionFilters().add(filter);
+        fc.setTitle("Specify a file to save");
+        return fc.showSaveDialog(owner);
     }
 }
