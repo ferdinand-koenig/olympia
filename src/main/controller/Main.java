@@ -57,6 +57,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
@@ -74,16 +75,16 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-       Parent root = FXMLLoader.load(getClass().getResource("UI.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("UI.fxml"));
 
-        Scene scene = new Scene(root, 700, 500);
+        Scene scene = new Scene(root, 700, 450);
 
         primaryStage.setTitle("Athletes");
         primaryStage.setScene(scene);
 
 
         IOHandler handler = new DBHandler();
-        HashMap<Integer, Athlete> athletes = new HashMap<>();
+        HashMap<Integer, Athlete> athletes;
 
         athletes = handler.read("C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\olympic.db");
 
@@ -106,6 +107,9 @@ public class Main extends Application {
 
         addListenerToTableItems((TableView) scene.lookup("#table"), primaryStage);
         ControllerUtilities.fillTable(ControllerUtilities.filterAthletes(athletes, (TextField) scene.lookup("#searchBar")), (TableView) scene.lookup("#table"));
+
+        primaryStage.getIcons().add(new Image("https://img.icons8.com/officexs/72/athlete.png"));
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 

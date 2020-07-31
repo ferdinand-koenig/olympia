@@ -91,6 +91,11 @@ public class Athlete implements java.io.Serializable{
         System.out.println(id + ": " + name + " (" + height + ", " + sex + ", " + weight + ") Member of Team: " + team.getName() + " in " + team.getNoc());
     }
 
+    /**
+     * Checks whether the athlete has won a Medal for a given event or not
+     * @param event
+     * @return Medal associated with event. If there is none, return value will be null
+     */
     public Medal wonMedalFor(Event event){
         for(Medal medal : this.getMedals())
             if(medal.getEvent().equals(event))

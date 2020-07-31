@@ -17,6 +17,13 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class AddEventController {
+    /**
+     * Starts the process of creating a new event as part of the front-end. <p>
+     * The Steps in the user experience are Step 1: showEntryForm(...)-> Step 2: athleteSelection(...) -> Step 3: getEventAndCreateAthlete(...)
+     * Explicitly in this function the user is asked to input general attributes of the athlete such as name.
+     * @param owner Stage or Window that will own the created pop-up
+     * @param athletes HashMap of existing Athletes
+     */
     public static void showEntryForm(Stage owner, HashMap<Integer, Athlete> athletes){
         try {
             Scene formScene = new Scene(FXMLLoader.load(AddEventController.class.getResource("AddEvent.fxml")));

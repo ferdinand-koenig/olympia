@@ -32,6 +32,11 @@ public class AthleteViewController {
         }
     }
 
+    /**
+     * Creates window for detailed view of an athlete
+     * @param athlete Attributes from this athlete will be used
+     * @param owner Stage or Window that will own the created pop-up
+     */
     public void showAthlete(Athlete athlete, Stage owner){
         try {
             Scene athleteScene = new Scene(FXMLLoader.load(AthleteViewController.class.getResource("AthleteView.fxml")));

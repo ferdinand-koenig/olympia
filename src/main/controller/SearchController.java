@@ -9,7 +9,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import main.application.Athlete;
-
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -81,15 +80,15 @@ public class SearchController {
             return false;
         });
 
-        searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+        searchBar.textProperty().addListener((observable, oldValue, newValue) ->
             filteredEntries.setPredicate(string -> {
                 if (newValue == null || newValue.isEmpty())
                     return true;
                 if (string.toLowerCase().contains(newValue.toLowerCase()))
                     return true;
                 return false;
-            });
-        });
+            })
+        );
 
         return filteredEntries;
     }

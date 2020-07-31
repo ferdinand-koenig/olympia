@@ -17,6 +17,14 @@ import java.util.Collections;
 import java.util.HashMap;
 
 public class AddAthleteController {
+    /**
+     * Starts the process of creating a new athlete as part of the front-end. <p>
+     * The Steps in the user experience are Step 1: showEntryForm(...) -> Step 2: getEventAndCreateAthlete(...) -> Step 3: AddEventController.getAgeAndAddParticipation(...)
+     * Explicitly in this function the user is asked to input general attributes of the athlete such as name.
+     * @param owner Stage or Window that will own the created pop-up
+     * @param athletes HashMap of existing Athletes
+     * @param rootScene is passed to getEventAndCreateAthlete(...) for updating the table view of athletes in this scene
+     */
     public static void showEntryForm(Stage owner, HashMap<Integer, Athlete> athletes, Scene rootScene){
         try {
             Scene formScene = new Scene(FXMLLoader.load(AddEventController.class.getResource("AddAthlete.fxml")));
@@ -72,6 +80,8 @@ public class AddAthleteController {
             formView.setTitle("Add new Athlete");
             formView.initOwner(owner);
             formView.setScene(formScene);
+            formView.setMinHeight(250);
+            formView.setMinWidth(200);
             formView.show();
         }catch(IOException e){
             System.err.println("Fatal: Cannot find AddAthlete.fxml");
