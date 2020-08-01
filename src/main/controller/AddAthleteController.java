@@ -39,21 +39,32 @@ public class AddAthleteController {
 
             Spinner<Integer> heightSpinner = ((Spinner<Integer>) formScene.lookup("#heightSpinner"));
             heightSpinner.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
-                try{
-                    if(0 > Integer.parseInt(newValue) || 300 < Integer.parseInt(newValue))
+                if(newValue.isBlank()) {
+                    heightSpinner.getEditor().textProperty().setValue("-1");
+                } else {
+                    try {
+                        if (-1 > Integer.parseInt(newValue) || 300 < Integer.parseInt(newValue))
+                            heightSpinner.getEditor().textProperty().set(oldValue);
+                    } catch (Exception e) {
                         heightSpinner.getEditor().textProperty().set(oldValue);
-                }catch(Exception e){
-                    heightSpinner.getEditor().textProperty().set(oldValue);
+                    }
                 }
             });
 
             Spinner<Double> weightSpinner = ((Spinner<Double>) formScene.lookup("#weightSpinner"));
             weightSpinner.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
-                try{
-                    if(0.0 > Double.parseDouble(newValue.replace(",", ".")) || 500.0 < Double.parseDouble(newValue.replace(",",".")))
+                if(newValue.isBlank()){
+                    weightSpinner.getEditor().textProperty().setValue("-1,0");
+                }else if(newValue.equals("-0,5")) {
+                    weightSpinner.getEditor().textProperty().setValue("0");
+                }else{
+                    try {
+                        if (-1.0 > Double.parseDouble(newValue.replace(",", ".")) || 500.0 < Double.parseDouble(newValue.replace(",", ".")) || !(Double.parseDouble(newValue.replace(",", ".")) % 0.5 == 0)) {
+                            weightSpinner.getEditor().textProperty().set(oldValue);
+                        }
+                    } catch (Exception e) {
                         weightSpinner.getEditor().textProperty().set(oldValue);
-                }catch(Exception e){
-                    weightSpinner.getEditor().textProperty().set(oldValue);
+                    }
                 }
             });
 
@@ -68,12 +79,11 @@ public class AddAthleteController {
                                     ((TextField) formScene.lookup("#nameTextField")).getText(),
                                     sexComboBox.getValue(),
                                     heightSpinner.getValue().intValue(),
-                                    weightSpinner.getValue().floatValue(),
+                                    (weightSpinner.getValue().floatValue() == (float) -0.5) ? (float) -1.0 : weightSpinner.getValue().floatValue(),
                                     new Team(((TextField) formScene.lookup("#teamTextField")).getText(), ((TextField) formScene.lookup("#nocTextField")).getText().toUpperCase()),
                                     athletes,
                                     formView,
                                     rootScene);
-                            //formView.close();
                         }
             });
 

@@ -29,12 +29,12 @@
       <ComboBox fx:id="sexComboBox" prefHeight="26.0" prefWidth="302.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <Spinner fx:id="heightSpinner" editable="true" prefHeight="26.0" prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
        <valueFactory>
-           <SpinnerValueFactory.IntegerSpinnerValueFactory initialValue="175" max="300" min="0" />
+           <SpinnerValueFactory.IntegerSpinnerValueFactory initialValue="175" max="300" min="-1" />
        </valueFactory>
       </Spinner>
       <Spinner fx:id="weightSpinner" editable="true" prefHeight="26.0" prefWidth="308.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
            <valueFactory>
-               <SpinnerValueFactory.DoubleSpinnerValueFactory amountToStepBy="0.5" initialValue="70.5" max="500.0" min="0.0" />
+               <SpinnerValueFactory.DoubleSpinnerValueFactory amountToStepBy="0.5" initialValue="70.5" max="500.0" min="-1.0" />
            </valueFactory>
        </Spinner>
       <TextField fx:id="teamTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />

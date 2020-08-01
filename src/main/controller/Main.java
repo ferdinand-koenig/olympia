@@ -56,8 +56,9 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
@@ -67,12 +68,9 @@ import javafx.stage.Stage;
 import main.application.Athlete;
 import main.application.DBHandler;
 import main.application.IOHandler;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
 
 public class Main extends Application {
     public static void main(String[] args) {
@@ -87,7 +85,6 @@ public class Main extends Application {
 
         primaryStage.setTitle("Athletes");
         primaryStage.setScene(scene);
-
         primaryStage.getIcons().add(new Image("https://img.icons8.com/officexs/72/athlete.png"));
         primaryStage.setResizable(false);
         primaryStage.show();

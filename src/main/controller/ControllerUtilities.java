@@ -18,6 +18,12 @@ import main.application.Athlete;
 import java.util.HashMap;
 
 public class ControllerUtilities {
+    /**
+     *
+     * @param athletes
+     * @param searchBar
+     * @return
+     */
     protected static FilteredList<Athlete> filterAthletes(HashMap<Integer, Athlete> athletes, TextField searchBar){
         ObservableList<Athlete> observableAthleteList = FXCollections.observableArrayList();
         observableAthleteList.addAll(athletes.values());
