@@ -9,7 +9,7 @@ public class Athlete implements java.io.Serializable{
     private String name, sex;
     private Team team; //Could be an athlete member of several teams? => No
     private List<Medal> medals = new ArrayList<>();
-    private List<Participation> participations = new ArrayList<>();
+    private final List<Participation> participations = new ArrayList<>();
 
     public Athlete(int id, String name, String sex, int height, float weight, Team team, Participation participation) {
         setId(id);

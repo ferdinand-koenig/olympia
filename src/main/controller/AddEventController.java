@@ -55,6 +55,11 @@ public class AddEventController {
         }
     }
 
+    /**
+     * Is called by submitting a form and reads the inputs to return an event
+     * @param formScene Scene with form in it
+     * @return Event with given parameters
+     */
     protected static Event submitEntryForm(Scene formScene){
         String title = ((TextField) formScene.lookup("#titleTextField")).getText(),
                 sport = ((TextField) formScene.lookup("#sportTextField")).getText(),
@@ -64,6 +69,13 @@ public class AddEventController {
         return new Event(title, sport, new Game(Integer.parseInt(year), season, city));
     }
 
+    /**
+     * Creates new window to ask the user for the age and medal <p>
+     * Finally a new Participation will be created and add to the given athlete
+     * @param athlete The given athlete
+     * @param event The corresponding event
+     * @param owner The logical owner window of the new pop-up
+     */
     protected static void getAgeAndAddParticipation(Athlete athlete, Event event, Stage owner){
         try{
             Stage stage = new Stage();
@@ -116,6 +128,12 @@ public class AddEventController {
         }
     }
 
+    /**
+     * In the creation process of an event this method is called for creating a new pop-up to select the participating athletes.
+     * @param event The corresponding event
+     * @param athletes The HashMap of all athletes
+     * @param stage The logical owner window of the new pop-up
+     */
     private static void athleteSelection(Event event, HashMap<Integer, Athlete> athletes, Stage stage){
         try{
             Scene athleteSelectionScene = new Scene(FXMLLoader.load(AddEventController.class.getResource("AddAthletesToEvent.fxml")));

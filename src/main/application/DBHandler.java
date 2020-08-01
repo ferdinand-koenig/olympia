@@ -15,6 +15,11 @@ public class DBHandler implements IOHandler{
     public DBHandler(){
     }
 
+    /**
+     * Reads from a comma separated data base
+     * @param path path to the db
+     * @return
+     */
     @Override
     public HashMap<Integer, Athlete> read(String path) {
         // validity of db
@@ -72,6 +77,11 @@ public class DBHandler implements IOHandler{
         return athletes;
     }
 
+    /**
+     * Writes to a comma separated data base
+     * @param athletes
+     * @param path path to the db
+     */
     @Override
     public void write(HashMap<Integer, Athlete> athletes, String path) {
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(path))){

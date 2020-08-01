@@ -19,10 +19,10 @@ import java.util.HashMap;
 
 public class ControllerUtilities {
     /**
-     *
-     * @param athletes
-     * @param searchBar
-     * @return
+     * Creates a filtered list of athletes depending on the search term
+     * @param athletes HashMap of athletes
+     * @param searchBar TextField with search term
+     * @return filtered list with athletes containing the search term in the name
      */
     protected static FilteredList<Athlete> filterAthletes(HashMap<Integer, Athlete> athletes, TextField searchBar){
         ObservableList<Athlete> observableAthleteList = FXCollections.observableArrayList();
@@ -34,6 +34,11 @@ public class ControllerUtilities {
         return filteredAthletes;
     }
 
+    /**
+     * Fills a given table with athletes
+     * @param athletes A filtered list of athletes
+     * @param table A TableView
+     */
     protected static void fillTable(FilteredList athletes, TableView table){
         TableColumn idColumn = (TableColumn) table.getColumns().get(0);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -44,6 +49,12 @@ public class ControllerUtilities {
         table.setItems(athletes);
     }
 
+    /**
+     * Updates the athlete table in a given scene. <p>
+     * Designed for the Main UI, but can easily called from every Controller.
+     * @param athletes HashMap of new athletes
+     * @param scene Scene that contains a searchBar and a table both with the same fx:id as the name
+     */
     protected static void updateAthleteTable(HashMap<Integer, Athlete> athletes, Scene scene){
         TextField searchBar = (TextField) scene.lookup("#searchBar");
         FilteredList<Athlete> filteredAthletes = ControllerUtilities.filterAthletes(athletes, searchBar);
@@ -55,6 +66,12 @@ public class ControllerUtilities {
         setPredicate(filteredAthletes, newValue);
     }
 
+    /**
+     * Fills a TextFlow with the same design
+     * @param textFlow That will be filled
+     * @param text The inner text
+     * @param fontSize The size of the font size
+     */
     protected static void fillTextFlow(TextFlow textFlow, String text, int fontSize){
         Text innerText = new Text(text);
         innerText.setFont(Font.font("Verdana", fontSize));

@@ -34,6 +34,10 @@ public class Event implements java.io.Serializable{
         this.game = game;
     }
 
+    /**
+     * Creates Description for the event
+     * @return String: title + ": " + game.toString()
+     */
     public String getDescription(){
         return this.getTitle().concat(": ").concat(getGame().toString());
     }

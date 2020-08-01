@@ -1,10 +1,16 @@
 package main.application;
 
+
 import java.io.*;
 import java.util.HashMap;
 
 public class Serializer implements IOHandler{
 
+    /**
+     * Reades from a serialized file
+     * @param path path to the db
+     * @return HashMap of athletes
+     */
     @Override
     public HashMap<Integer, Athlete> read(String path) {
         try {
@@ -24,6 +30,11 @@ public class Serializer implements IOHandler{
         }
     }
 
+    /**
+     * Writes to a serialized file
+     * @param athletes
+     * @param path path to the db
+     */
     @Override
     public void write(HashMap<Integer, Athlete> athletes, String path) {
         try{

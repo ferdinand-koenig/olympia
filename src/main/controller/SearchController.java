@@ -13,6 +13,11 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class SearchController {
+    /**
+     * Handles and creates the search pop-up
+     * @param athletes All athletes
+     * @param owner The logical owner window of the new pop-up
+     */
     public static void showSearchScene(HashMap<Integer, Athlete> athletes, Stage owner){
         Stage stage = new Stage();
         try {

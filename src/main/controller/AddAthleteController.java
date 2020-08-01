@@ -79,7 +79,7 @@ public class AddAthleteController {
                                     ((TextField) formScene.lookup("#nameTextField")).getText(),
                                     sexComboBox.getValue(),
                                     heightSpinner.getValue().intValue(),
-                                    (weightSpinner.getValue().floatValue() == (float) -0.5) ? (float) -1.0 : weightSpinner.getValue().floatValue(),
+                                    weightSpinner.getValue().floatValue(),
                                     new Team(((TextField) formScene.lookup("#teamTextField")).getText(), ((TextField) formScene.lookup("#nocTextField")).getText().toUpperCase()),
                                     athletes,
                                     formView,
