@@ -49,7 +49,8 @@ class ControllerUtilities {
         //noinspection unchecked
         TableColumn<Athlete, String> nameColumn = (TableColumn<Athlete, String>) table.getColumns().get(1);
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        @SuppressWarnings("unchecked") TableColumn<Athlete, String> teamColumn = (TableColumn<Athlete, String>) table.getColumns().get(2);
+        //noinspection unchecked
+        TableColumn<Athlete, String> teamColumn = (TableColumn<Athlete, String>) table.getColumns().get(2);
         teamColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getTeam().getName()));
         table.setItems(athletes);
     }
