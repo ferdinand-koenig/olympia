@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class AddEventController {
+class AddEventController {
     private static boolean hintAlreadyShownOnce = false;
 
     /**
@@ -27,12 +27,13 @@ public class AddEventController {
      * @param owner Stage or Window that will own the created pop-up
      * @param athletes HashMap of existing Athletes
      */
-    public static void showEntryForm(Stage owner, HashMap<Integer, Athlete> athletes, HashMap<Integer, Athlete> modifiedAthletes){
+    static void showEntryForm(Stage owner, HashMap<Integer, Athlete> athletes, HashMap<Integer, Athlete> modifiedAthletes){
         try {
             Scene formScene = new Scene(FXMLLoader.load(AddEventController.class.getResource("AddEvent.fxml")));
             Stage formView = new Stage();
 
-            ComboBox<String> seasonComboBox = (ComboBox) formScene.lookup("#seasonComboBox");
+            //noinspection unchecked
+            ComboBox<String> seasonComboBox = (ComboBox<String>) formScene.lookup("#seasonComboBox");
             seasonComboBox.setItems(FXCollections.observableArrayList(
                     "Summer",
                     "Winter"
@@ -66,7 +67,8 @@ public class AddEventController {
      * @param formScene Scene with form in it
      * @return Event with given parameters
      */
-    protected static Event submitEntryForm(Scene formScene){
+    static Event submitEntryForm(Scene formScene){
+        //noinspection unchecked
         String title = ((TextField) formScene.lookup("#titleTextField")).getText(),
                 sport = ((TextField) formScene.lookup("#sportTextField")).getText(),
                 year = ((TextField) formScene.lookup("#yearTextField")).getText(),
@@ -82,12 +84,13 @@ public class AddEventController {
      * @param event The corresponding event
      * @param owner The logical owner window of the new pop-up
      */
-    protected static void getAgeAndAddParticipation(Athlete athlete, HashMap<Integer, Athlete> modifiedAthletes, Event event, Stage owner){
+    static void getAgeAndAddParticipation(Athlete athlete, HashMap<Integer, Athlete> modifiedAthletes, Event event, Stage owner){
         try{
             Stage stage = new Stage();
             Scene ageEntryScene = new Scene(FXMLLoader.load(AddEventController.class.getResource("AddAge.fxml")));
 
-            Spinner ageSpinner = ((Spinner) ageEntryScene.lookup("#ageSpinner"));
+            //noinspection unchecked
+            Spinner<Integer> ageSpinner = ((Spinner<Integer>) ageEntryScene.lookup("#ageSpinner"));
             ageSpinner.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
                 try{
                     if(0 > Integer.parseInt(newValue) || 99 < Integer.parseInt(newValue))
@@ -99,7 +102,8 @@ public class AddEventController {
 
             ControllerUtilities.fillTextFlow((TextFlow) ageEntryScene.lookup("#messageTextFlow"), "Input Age for: ".concat(athlete.getName()), 25);
 
-            ComboBox<String> medalComboBox = (ComboBox) ageEntryScene.lookup("#medalComboBox");
+            //noinspection unchecked
+            ComboBox<String> medalComboBox = (ComboBox<String>) ageEntryScene.lookup("#medalComboBox");
             ObservableList<String> medalValues = FXCollections.observableArrayList();
             medalValues.add("None");
             for(Medal.Value value : Medal.Value.values())
@@ -111,7 +115,7 @@ public class AddEventController {
                 if(evt.getButton() == MouseButton.PRIMARY){
                     int age;
                     try{
-                        age = ((Spinner<Integer>) ageSpinner).getValue().intValue();
+                        age = ageSpinner.getValue();
                     }catch(NumberFormatException e){
                         return;
                     }
@@ -153,7 +157,8 @@ public class AddEventController {
         try{
             Scene athleteSelectionScene = new Scene(FXMLLoader.load(AddEventController.class.getResource("AddAthletesToEvent.fxml")));
 
-            TableView table = (TableView) athleteSelectionScene.lookup("#table");
+            //noinspection unchecked
+            TableView<Athlete> table = (TableView<Athlete>) athleteSelectionScene.lookup("#table");
             ControllerUtilities.fillTable(ControllerUtilities.filterAthletes(athletes, (TextField) athleteSelectionScene.lookup("#searchBar")), table);
             table.getSelectionModel().setSelectionMode(
                     SelectionMode.MULTIPLE
@@ -197,7 +202,7 @@ public class AddEventController {
         ScheduledExecutorService executor =  Executors.newSingleThreadScheduledExecutor();
         executor.submit(() -> Platform.runLater(alert::show));
         executor.schedule(
-                () -> Platform.runLater(() -> alert.close())
+                () -> Platform.runLater(alert::close)
                 , 8
                 , TimeUnit.SECONDS);
     }

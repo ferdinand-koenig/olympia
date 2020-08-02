@@ -6,7 +6,7 @@ import java.util.HashMap;
 public class Serializer implements IOHandler{
 
     /**
-     * Reades from a serialized file
+     * Reads from a serialized file
      * @param path path to the db
      * @return HashMap of athletes
      */
@@ -15,7 +15,7 @@ public class Serializer implements IOHandler{
         try {
             FileInputStream fileIn = new FileInputStream(path);
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            HashMap<Integer, Athlete> athletes = (HashMap<Integer, Athlete>) in.readObject();
+            @SuppressWarnings("unchecked") HashMap<Integer, Athlete> athletes = (HashMap<Integer, Athlete>) in.readObject();
             in.close();
             fileIn.close();
             return athletes;

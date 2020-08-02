@@ -14,7 +14,7 @@ public class Event implements java.io.Serializable{
         return title;
     }
 
-    public void setTitle(String title) {
+    private void setTitle(String title) {
         this.title = title;
     }
 
@@ -22,7 +22,7 @@ public class Event implements java.io.Serializable{
         return sport;
     }
 
-    public void setSport(String sport) {
+    private void setSport(String sport) {
         this.sport = sport;
     }
 
@@ -30,7 +30,7 @@ public class Event implements java.io.Serializable{
         return game;
     }
 
-    public void setGame(Game game) {
+    private void setGame(Game game) {
         this.game = game;
     }
 
@@ -38,7 +38,7 @@ public class Event implements java.io.Serializable{
      * Creates Description for the event
      * @return String: title + ": " + game.toString()
      */
-    public String getDescription(){
+    String getDescription(){
         return this.getTitle().concat(": ").concat(getGame().toString());
     }
 }

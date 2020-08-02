@@ -10,27 +10,27 @@ public class Game implements java.io.Serializable{
         setCity(city);
     }
 
-    public int getYear() {
+    int getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    private void setYear(int year) {
         this.year = year;
     }
 
-    public String getSeason() {
+    String getSeason() {
         return season;
     }
 
-    public void setSeason(String season) {
+    private void setSeason(String season) {
         this.season = season;
     }
 
-    public String getCity() {
+    String getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    private void setCity(String city) {
         this.city = city;
     }
 

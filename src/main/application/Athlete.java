@@ -25,7 +25,7 @@ public class Athlete implements java.io.Serializable{
         return id;
     }
 
-    public void setId(int id) {
+    private void setId(int id) {
         this.id = id;
     }
 
@@ -33,7 +33,7 @@ public class Athlete implements java.io.Serializable{
         return height;
     }
 
-    public void setHeight(int height) {
+    private void setHeight(int height) {
         this.height = height;
     }
 
@@ -41,7 +41,7 @@ public class Athlete implements java.io.Serializable{
         return weight;
     }
 
-    public void setWeight(float weight) {
+    private void setWeight(float weight) {
         this.weight = weight;
     }
 
@@ -49,7 +49,7 @@ public class Athlete implements java.io.Serializable{
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -57,7 +57,7 @@ public class Athlete implements java.io.Serializable{
         return sex;
     }
 
-    public void setSex(String sex) {
+    private void setSex(String sex) {
         this.sex = sex;
     }
 
@@ -65,7 +65,7 @@ public class Athlete implements java.io.Serializable{
         return team;
     }
 
-    public void setTeam(Team team) {
+    private void setTeam(Team team) {
         this.team = team;
     }
 
@@ -77,7 +77,7 @@ public class Athlete implements java.io.Serializable{
         participations.add(participation);
     }
 
-    public List<Medal> getMedals() {
+    private List<Medal> getMedals() {
         return medals;
     }
 
@@ -96,19 +96,5 @@ public class Athlete implements java.io.Serializable{
             if(medal.getEvent().equals(event))
                 return medal;
         return null;
-    }
-
-    //eventuell weglassen
-    @Override
-    public int hashCode(){
-        return this.id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) return true;
-        if (!(o instanceof Athlete)) return false;
-
-        return o.hashCode() == this.hashCode() && ((Athlete) o).sex.equals(this.sex) && ((Athlete) o).height == this.height && ((Athlete) o).name.equals(this.name) && ((Athlete) o).weight == this.weight;
     }
 }

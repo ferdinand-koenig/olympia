@@ -17,14 +17,14 @@ import main.application.Athlete;
 
 import java.util.HashMap;
 
-public class ControllerUtilities {
+class ControllerUtilities {
     /**
      * Creates a filtered list of athletes depending on the search term
      * @param athletes HashMap of athletes
      * @param searchBar TextField with search term
      * @return filtered list with athletes containing the search term in the name
      */
-    protected static FilteredList<Athlete> filterAthletes(HashMap<Integer, Athlete> athletes, TextField searchBar){
+    static FilteredList<Athlete> filterAthletes(HashMap<Integer, Athlete> athletes, TextField searchBar){
         ObservableList<Athlete> observableAthleteList = FXCollections.observableArrayList();
         observableAthleteList.addAll(athletes.values());
         FilteredList<Athlete> filteredAthletes = new FilteredList<>(observableAthleteList, p -> true);
@@ -39,12 +39,14 @@ public class ControllerUtilities {
      * @param athletes A filtered list of athletes
      * @param table A TableView
      */
-    protected static void fillTable(FilteredList athletes, TableView table){
-        TableColumn idColumn = (TableColumn) table.getColumns().get(0);
+    static void fillTable(FilteredList<Athlete> athletes, TableView<Athlete> table){
+        //noinspection unchecked
+        TableColumn<Athlete, Integer> idColumn = (TableColumn<Athlete, Integer>) table.getColumns().get(0);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        TableColumn nameColumn = (TableColumn) table.getColumns().get(1);
+        //noinspection unchecked
+        TableColumn<Athlete, String> nameColumn = (TableColumn<Athlete, String>) table.getColumns().get(1);
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        TableColumn<Athlete, String> teamColumn = (TableColumn) table.getColumns().get(2);
+        @SuppressWarnings("unchecked") TableColumn<Athlete, String> teamColumn = (TableColumn<Athlete, String>) table.getColumns().get(2);
         teamColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getTeam().getName()));
         table.setItems(athletes);
     }
@@ -55,12 +57,14 @@ public class ControllerUtilities {
      * @param athletes HashMap of new athletes
      * @param scene Scene that contains a searchBar and a table both with the same fx:id as the name
      */
-    protected static void updateAthleteTable(HashMap<Integer, Athlete> athletes, Scene scene){
+    @SuppressWarnings("unchecked")
+    static void updateAthleteTable(HashMap<Integer, Athlete> athletes, Scene scene){
         TextField searchBar = (TextField) scene.lookup("#searchBar");
         FilteredList<Athlete> filteredAthletes = ControllerUtilities.filterAthletes(athletes, searchBar);
 
-        ((TableView) scene.lookup("#table")).setItems(filteredAthletes);
-        ((TableView) scene.lookup("#table")).refresh();
+        //noinspection unchecked
+        ((TableView<Athlete>) scene.lookup("#table")).setItems(filteredAthletes);
+        ((TableView<Athlete>) scene.lookup("#table")).refresh();
 
         String newValue = searchBar.getText();
         setPredicate(filteredAthletes, newValue);
@@ -72,7 +76,7 @@ public class ControllerUtilities {
      * @param text The inner text
      * @param fontSize The size of the font size
      */
-    protected static void fillTextFlow(TextFlow textFlow, String text, int fontSize){
+    static void fillTextFlow(TextFlow textFlow, String text, int fontSize){
         Text innerText = new Text(text);
         innerText.setFont(Font.font("Verdana", fontSize));
         innerText.setTextAlignment(TextAlignment.CENTER);

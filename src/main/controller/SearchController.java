@@ -12,18 +12,18 @@ import main.application.Athlete;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class SearchController {
+class SearchController {
     /**
      * Handles and creates the search pop-up
      * @param athletes All athletes
      * @param owner The logical owner window of the new pop-up
      */
-    public static void showSearchScene(HashMap<Integer, Athlete> athletes, Stage owner){
+    static void showSearchScene(HashMap<Integer, Athlete> athletes, Stage owner){
         Stage stage = new Stage();
         try {
             Scene searchScene = new Scene(FXMLLoader.load(SearchController.class.getResource("Search.fxml")));
 
-            ComboBox<String> categoryComboBox = (ComboBox) searchScene.lookup("#categoryComboBox");
+            @SuppressWarnings("unchecked") ComboBox<String> categoryComboBox = (ComboBox<String>) searchScene.lookup("#categoryComboBox");
             categoryComboBox.setItems(FXCollections.observableArrayList(
                     "Team",
                     "Sport",
@@ -31,7 +31,8 @@ public class SearchController {
                     "Game"
             ));
 
-            ListView list = (ListView) searchScene.lookup("#listView");
+            //noinspection unchecked
+            ListView<String> list = (ListView<String>) searchScene.lookup("#listView");
             HashMap<String, String> entries = new HashMap<>();
             categoryComboBox.getSelectionModel().selectedItemProperty().addListener( (options, oldValue, newValue) -> {
                     entries.clear();
@@ -59,7 +60,7 @@ public class SearchController {
                                     )
                             );
                         }
-                    list.setItems(filterList(entries, (TextField) searchScene.lookup("#searchBar")));
+                list.setItems(filterList(entries, (TextField) searchScene.lookup("#searchBar")));
                 }
             );
 

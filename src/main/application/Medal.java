@@ -37,7 +37,7 @@ public class Medal implements java.io.Serializable{
         return value;
     }
 
-    public void setValue(Value value) {
+    private void setValue(Value value) {
         this.value = value;
     }
 
@@ -45,7 +45,7 @@ public class Medal implements java.io.Serializable{
         return event;
     }
 
-    public void setEvent(Event event) {
+    private void setEvent(Event event) {
         this.event = event;
     }
 }

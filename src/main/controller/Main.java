@@ -1,22 +1,5 @@
 package main.controller;
 
-/*
-import java.util.HashMap;
-import java.util.Map;
-
-public class Main{
-    //Matrikelnummer.zip
-    //finalize vars
-    //JavaDoc fehlt
-    //Handling von exceptions
-    //Only adding new athletes
-    //beim einfügen auch kontrolle, ob die events/games schon bestehen
-    //ev. einige Variablen auf final, wenn sie sich nicht ändern
-    //Participation dennoch als innerclass? Umschreiben bei anderen Klassen -> ev in Konstruktot rein. Ganz am Ende
-
- */
-
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -83,17 +66,19 @@ public class Main extends Application {
                 if((file = saveFile(primaryStage)) == null)
                     return;
                 handler.write(athletes, file.getPath());
-                (new File("athletes.ser")).delete();
+                if(!(new File("athletes.ser")).delete()) System.err.println("[Warning] Serializer in class Main: Could not delete file.");
             }
         });
 
         ControllerUtilities.fillTextFlow((TextFlow) scene.lookup("#hintTextFlow"), "Hint: Double-click on athlete for more details", 10);
 
-        addListenerToTableItems((TableView) scene.lookup("#table"), primaryStage);
-        ControllerUtilities.fillTable(ControllerUtilities.filterAthletes(athletes, (TextField) scene.lookup("#searchBar")), (TableView) scene.lookup("#table"));
+        //noinspection unchecked
+        addListenerToTableItems((TableView<Athlete>) scene.lookup("#table"), primaryStage);
+        //noinspection unchecked
+        ControllerUtilities.fillTable(ControllerUtilities.filterAthletes(athletes, (TextField) scene.lookup("#searchBar")), (TableView<Athlete>) scene.lookup("#table"));
     }
 
-    private static void addListenerToTableItems(TableView table, Stage primaryStage){
+    private static void addListenerToTableItems(TableView<Athlete> table, Stage primaryStage){
         table.setRowFactory(tv -> {
             TableRow<Athlete> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -176,7 +161,7 @@ public class Main extends Application {
             HashMap<Integer, Athlete> modifiedAthletes = (new Serializer()).read("athletes.ser");
             athletes.putAll(modifiedAthletes);
         }else
-            (new File("athletes.ser")).delete();
+            if(!(new File("athletes.ser")).delete()) System.err.println("[Warning] Serializer in class Main: Could not delete file.");
 
         return athletes;
     }

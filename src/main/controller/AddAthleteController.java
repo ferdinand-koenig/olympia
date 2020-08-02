@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class AddAthleteController {
+class AddAthleteController {
     /**
      * Starts the process of creating a new athlete as part of the front-end. <p>
      * The Steps in the user experience are Step 1: showEntryForm(...) -> Step 2: getEventAndCreateAthlete(...) -> Step 3: AddEventController.getAgeAndAddParticipation(...)
@@ -25,19 +25,19 @@ public class AddAthleteController {
      * @param athletes HashMap of existing Athletes
      * @param rootScene is passed to getEventAndCreateAthlete(...) for updating the table view of athletes in this scene
      */
-    public static void showEntryForm(Stage owner, HashMap<Integer, Athlete> athletes, HashMap<Integer, Athlete> modifiedAthletes, Scene rootScene){
+    static void showEntryForm(Stage owner, HashMap<Integer, Athlete> athletes, HashMap<Integer, Athlete> modifiedAthletes, Scene rootScene){
         try {
             Scene formScene = new Scene(FXMLLoader.load(AddEventController.class.getResource("AddAthlete.fxml")));
             Stage formView = new Stage();
 
-            ComboBox<String> sexComboBox = (ComboBox) formScene.lookup("#sexComboBox");
+            @SuppressWarnings("unchecked") ComboBox<String> sexComboBox = (ComboBox<String>) formScene.lookup("#sexComboBox");
             sexComboBox.setItems(FXCollections.observableArrayList(
                     "F",
                     "M"
             ));
             sexComboBox.getSelectionModel().selectFirst();
 
-            Spinner<Integer> heightSpinner = ((Spinner<Integer>) formScene.lookup("#heightSpinner"));
+            @SuppressWarnings("unchecked") Spinner<Integer> heightSpinner = ((Spinner<Integer>) formScene.lookup("#heightSpinner"));
             heightSpinner.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
                 if(newValue.isBlank()) {
                     heightSpinner.getEditor().textProperty().setValue("-1");
@@ -51,7 +51,7 @@ public class AddAthleteController {
                 }
             });
 
-            Spinner<Double> weightSpinner = ((Spinner<Double>) formScene.lookup("#weightSpinner"));
+            @SuppressWarnings("unchecked") Spinner<Double> weightSpinner = ((Spinner<Double>) formScene.lookup("#weightSpinner"));
             weightSpinner.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
                 if(newValue.isBlank()){
                     weightSpinner.getEditor().textProperty().setValue("-1,0");
@@ -78,7 +78,7 @@ public class AddAthleteController {
                             getEventAndCreateAthlete(
                                     ((TextField) formScene.lookup("#nameTextField")).getText(),
                                     sexComboBox.getValue(),
-                                    heightSpinner.getValue().intValue(),
+                                    heightSpinner.getValue(),
                                     weightSpinner.getValue().floatValue(),
                                     new Team(((TextField) formScene.lookup("#teamTextField")).getText(), ((TextField) formScene.lookup("#nocTextField")).getText().toUpperCase()),
                                     athletes,
@@ -104,7 +104,7 @@ public class AddAthleteController {
         try {
             Scene formScene = new Scene(FXMLLoader.load(AddEventController.class.getResource("AddEvent.fxml")));
 
-            ComboBox<String> seasonComboBox = (ComboBox) formScene.lookup("#seasonComboBox");
+            @SuppressWarnings("unchecked") ComboBox<String> seasonComboBox = (ComboBox<String>) formScene.lookup("#seasonComboBox");
             seasonComboBox.setItems(FXCollections.observableArrayList(
                     "Summer",
                     "Winter"

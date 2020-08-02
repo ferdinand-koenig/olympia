@@ -17,6 +17,7 @@ import main.application.Participation;
 
 import java.io.IOException;
 
+@SuppressWarnings("WeakerAccess")
 public class AthleteViewController {
     private static class ParticipationListElement{
         private final Participation participation;
@@ -78,7 +79,7 @@ public class AthleteViewController {
         for(Participation participation : athlete.getParticipations())
                 observableParticipationList.add(new ParticipationListElement(participation, athlete.wonMedalFor(participation.getEvent())));
 
-        TableView table = (TableView) athleteScene.lookup("#participationTable");
+        @SuppressWarnings("unchecked") TableView<ParticipationListElement> table = (TableView<ParticipationListElement>) athleteScene.lookup("#participationTable");
         TableColumn<ParticipationListElement, String> ageColumn = new TableColumn<>("Age");
         ageColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(Integer.toString(param.getValue().participation.getAge())));
         TableColumn<ParticipationListElement, String> titleColumn = new TableColumn<>("Title");
@@ -91,7 +92,9 @@ public class AthleteViewController {
         medalColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().medalString()));
 
         TableColumn<ParticipationListElement, String> eventColumn = new TableColumn<>("Event");
+        //noinspection unchecked
         eventColumn.getColumns().addAll(titleColumn, sportColumn, gameColumn);
+        //noinspection unchecked
         table.getColumns().addAll(ageColumn, eventColumn, medalColumn);
         table.setItems(observableParticipationList);
     }

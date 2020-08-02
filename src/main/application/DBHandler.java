@@ -2,7 +2,6 @@ package main.application;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -68,9 +67,8 @@ public class DBHandler implements IOHandler{
                             break;
                         }
             }
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (IOException e){
+            System.err.println("IOException in DBHandler.read!");
             e.printStackTrace();
         }
         return athletes;
