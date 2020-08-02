@@ -134,7 +134,7 @@ public class DBHandler implements IOHandler{
         personPartOne = personPartOne.concat(wrap(addDoubleQuotes(athlete.getName()))).concat(",");
         personPartOne = personPartOne.concat(wrap(athlete.getSex())).concat(",");
 
-        personPartTwo = athlete.getHeight() == -1 ? "NA" : Integer.toString(athlete.getHeight()).concat(",");
+        personPartTwo = athlete.getHeight() == -1 ? "NA".concat(",") : Integer.toString(athlete.getHeight()).concat(",");
         if(Float.compare(athlete.getWeight(), -1.0f) == 0){
             weight = "NA";
         }else{
