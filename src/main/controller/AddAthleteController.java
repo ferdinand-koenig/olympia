@@ -25,7 +25,7 @@ public class AddAthleteController {
      * @param athletes HashMap of existing Athletes
      * @param rootScene is passed to getEventAndCreateAthlete(...) for updating the table view of athletes in this scene
      */
-    public static void showEntryForm(Stage owner, HashMap<Integer, Athlete> athletes, Scene rootScene){
+    public static void showEntryForm(Stage owner, HashMap<Integer, Athlete> athletes, HashMap<Integer, Athlete> modifiedAthletes, Scene rootScene){
         try {
             Scene formScene = new Scene(FXMLLoader.load(AddEventController.class.getResource("AddAthlete.fxml")));
             Stage formView = new Stage();
@@ -82,6 +82,7 @@ public class AddAthleteController {
                                     weightSpinner.getValue().floatValue(),
                                     new Team(((TextField) formScene.lookup("#teamTextField")).getText(), ((TextField) formScene.lookup("#nocTextField")).getText().toUpperCase()),
                                     athletes,
+                                    modifiedAthletes,
                                     formView,
                                     rootScene);
                         }
@@ -99,7 +100,7 @@ public class AddAthleteController {
         }
     }
 
-    private static void getEventAndCreateAthlete(String name, String sex, int height, float weight, Team team, HashMap<Integer, Athlete> athletes, Stage stage, Scene rootScene) {
+    private static void getEventAndCreateAthlete(String name, String sex, int height, float weight, Team team, HashMap<Integer, Athlete> athletes, HashMap<Integer, Athlete> modifiedAthletes, Stage stage, Scene rootScene) {
         try {
             Scene formScene = new Scene(FXMLLoader.load(AddEventController.class.getResource("AddEvent.fxml")));
 
@@ -123,7 +124,7 @@ public class AddAthleteController {
                     int nextFreeKey = Collections.max(athletes.keySet()) +1;
 
                     Athlete incompleteAthlete = new Athlete(nextFreeKey, name, sex, height, weight, team, null);
-                    AddEventController.getAgeAndAddParticipation(incompleteAthlete, AddEventController.submitEntryForm(formScene), stage);
+                    AddEventController.getAgeAndAddParticipation(incompleteAthlete, modifiedAthletes, AddEventController.submitEntryForm(formScene), stage);
 
                     athletes.put(nextFreeKey, incompleteAthlete);
                     ControllerUtilities.updateAthleteTable(athletes, rootScene);

@@ -21,7 +21,7 @@ public class AddEventController {
      * @param owner Stage or Window that will own the created pop-up
      * @param athletes HashMap of existing Athletes
      */
-    public static void showEntryForm(Stage owner, HashMap<Integer, Athlete> athletes){
+    public static void showEntryForm(Stage owner, HashMap<Integer, Athlete> athletes, HashMap<Integer, Athlete> modifiedAthletes){
         try {
             Scene formScene = new Scene(FXMLLoader.load(AddEventController.class.getResource("AddEvent.fxml")));
             Stage formView = new Stage();
@@ -41,7 +41,7 @@ public class AddEventController {
                     }catch(NumberFormatException e){
                         return;
                     }
-                    athleteSelection(submitEntryForm(formScene), athletes, formView);
+                    athleteSelection(submitEntryForm(formScene), athletes, modifiedAthletes, formView);
                 }
             });
 
@@ -76,7 +76,7 @@ public class AddEventController {
      * @param event The corresponding event
      * @param owner The logical owner window of the new pop-up
      */
-    protected static void getAgeAndAddParticipation(Athlete athlete, Event event, Stage owner){
+    protected static void getAgeAndAddParticipation(Athlete athlete, HashMap<Integer, Athlete> modifiedAthletes, Event event, Stage owner){
         try{
             Stage stage = new Stage();
             Scene ageEntryScene = new Scene(FXMLLoader.load(AddEventController.class.getResource("AddAge.fxml")));
@@ -109,12 +109,17 @@ public class AddEventController {
                     }catch(NumberFormatException e){
                         return;
                     }
+
                     athlete.addParticipation(new Participation(age, event));
+
                     for(Medal.Value value : Medal.Value.values())
                         if(value.toString().equals(medalComboBox.getValue())){
                             athlete.addMedal(new Medal(value, event));
                             break;
                         }
+
+                    modifiedAthletes.put(athlete.getId(), athlete);
+                    (new Serializer()).write(modifiedAthletes, "athletes.ser");
                     stage.close();
                 }
             });
@@ -134,7 +139,7 @@ public class AddEventController {
      * @param athletes The HashMap of all athletes
      * @param stage The logical owner window of the new pop-up
      */
-    private static void athleteSelection(Event event, HashMap<Integer, Athlete> athletes, Stage stage){
+    private static void athleteSelection(Event event, HashMap<Integer, Athlete> athletes, HashMap<Integer, Athlete> modifiedAthletes, Stage stage){
         try{
             Scene athleteSelectionScene = new Scene(FXMLLoader.load(AddEventController.class.getResource("AddAthletesToEvent.fxml")));
 
@@ -154,7 +159,7 @@ public class AddEventController {
                     ObservableList<Athlete> selectedAthletes = table.getSelectionModel().getSelectedItems();
                     if(!selectedAthletes.isEmpty()){
                        selectedAthletes.forEach(athlete ->
-                           getAgeAndAddParticipation(athlete, event, stage)
+                           getAgeAndAddParticipation(athlete, modifiedAthletes, event, stage)
                        );
                        stage.close();
                     }
