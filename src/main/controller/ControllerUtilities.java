@@ -17,6 +17,9 @@ import main.application.Athlete;
 
 import java.util.HashMap;
 
+/**
+ * This class contains functions that are used by several other controllers.
+ */
 class ControllerUtilities {
     /**
      * Creates a filtered list of athletes depending on the search term
