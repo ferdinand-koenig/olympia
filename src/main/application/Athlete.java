@@ -8,7 +8,7 @@ public class Athlete implements java.io.Serializable{
     private float weight;
     private String name, sex;
     private Team team; //Could be an athlete member of several teams? => No
-    private List<Medal> medals = new ArrayList<>();
+    private final List<Medal> medals = new ArrayList<>();
     private final List<Participation> participations = new ArrayList<>();
 
     public Athlete(int id, String name, String sex, int height, float weight, Team team, Participation participation) {
@@ -86,14 +86,9 @@ public class Athlete implements java.io.Serializable{
     }
 
 
-    //auf jeden Fall löschen
-    public void debug(){
-        System.out.println(id + ": " + name + " (" + height + ", " + sex + ", " + weight + ") Member of Team: " + team.getName() + " in " + team.getNoc());
-    }
-
     /**
-     * Checks whether the athlete has won a Medal for a given event or not
-     * @param event
+     * Checks whether the athlete has won a medal for a given event or not
+     * @param event event for which the existence of a medal is checked for
      * @return Medal associated with event. If there is none, return value will be null
      */
     public Medal wonMedalFor(Event event){
@@ -114,6 +109,6 @@ public class Athlete implements java.io.Serializable{
         if (o == this) return true;
         if (!(o instanceof Athlete)) return false;
 
-        return ((Athlete) o).hashCode() == this.hashCode() && ((Athlete) o).sex.equals(this.sex) && ((Athlete) o).height == this.height && ((Athlete) o).name.equals(this.name) && ((Athlete) o).weight == this.weight;
+        return o.hashCode() == this.hashCode() && ((Athlete) o).sex.equals(this.sex) && ((Athlete) o).height == this.height && ((Athlete) o).name.equals(this.name) && ((Athlete) o).weight == this.weight;
     }
 }

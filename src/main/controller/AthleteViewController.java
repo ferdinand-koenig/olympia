@@ -19,8 +19,8 @@ import java.io.IOException;
 
 public class AthleteViewController {
     private static class ParticipationListElement{
-        private Participation participation;
-        private Medal medal;
+        private final Participation participation;
+        private final Medal medal;
 
         ParticipationListElement(Participation participation, Medal medal){
             this.participation=participation;

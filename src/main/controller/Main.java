@@ -172,7 +172,7 @@ public class Main extends Application {
         alert.getButtonTypes().setAll(buttonTypeConfirm, buttonTypeCancel);
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == buttonTypeConfirm){
+        if (result.isPresent() && result.get() == buttonTypeConfirm){
             HashMap<Integer, Athlete> modifiedAthletes = (new Serializer()).read("athletes.ser");
             athletes.putAll(modifiedAthletes);
         }else

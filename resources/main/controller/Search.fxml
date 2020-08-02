@@ -8,12 +8,10 @@
       <ListView fx:id="listView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </center>
    <top>
-      <AnchorPane prefHeight="85.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-         <children>
-            <TextField fx:id="searchBar" layoutX="148.0" layoutY="14.0" prefHeight="26.0" prefWidth="198.0" />
-            <Label layoutX="354.0" layoutY="19.0" text="in" />
-            <ComboBox fx:id="categoryComboBox" layoutX="377.0" layoutY="14.0" prefWidth="150.0" />
-         </children>
-      </AnchorPane>
+       <AnchorPane prefHeight="85.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+           <TextField fx:id="searchBar" layoutX="148.0" layoutY="14.0" prefHeight="26.0" prefWidth="198.0"/>
+           <Label layoutX="354.0" layoutY="19.0" text="in"/>
+           <ComboBox fx:id="categoryComboBox" layoutX="377.0" layoutY="14.0" prefWidth="150.0"/>
+       </AnchorPane>
    </top>
 </BorderPane>

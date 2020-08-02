@@ -86,9 +86,7 @@ public class ControllerUtilities {
                 return true;
             if (person.getName().toLowerCase().contains(newValue.toLowerCase()))
                 return true;
-            if(Integer.toString(person.getId()).contains(newValue))
-                return true;
-            return false;
+            return Integer.toString(person.getId()).contains(newValue);
         });
     }
 }

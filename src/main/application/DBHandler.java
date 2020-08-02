@@ -18,11 +18,10 @@ public class DBHandler implements IOHandler{
     /**
      * Reads from a comma separated data base
      * @param path path to the db
-     * @return
+     * @return Athletes from the given database
      */
     @Override
     public HashMap<Integer, Athlete> read(String path) {
-        // validity of db
         String line;
         Pattern pattern = Pattern.compile(",");
         String[] attribute;
@@ -42,7 +41,7 @@ public class DBHandler implements IOHandler{
         Game game;
 
         try (BufferedReader in = new BufferedReader(new FileReader(path))) {
-            in.readLine(); //Forget first line  //what happens if file is empty
+            in.readLine();
             while((line = in.readLine()) != null) {
                 attribute = fixSplit(pattern.split(line));
 
@@ -79,7 +78,7 @@ public class DBHandler implements IOHandler{
 
     /**
      * Writes to a comma separated data base
-     * @param athletes
+     * @param athletes Athletes to save
      * @param path path to the db
      */
     @Override

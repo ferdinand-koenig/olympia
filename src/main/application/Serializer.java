@@ -23,7 +23,7 @@ public class Serializer implements IOHandler{
             i.printStackTrace();
             return null;
         } catch (ClassNotFoundException c) {
-            System.out.println("Employee class not found");
+            System.out.println("Athlete class not found!");
             c.printStackTrace();
             return null;
         }
@@ -31,7 +31,7 @@ public class Serializer implements IOHandler{
 
     /**
      * Writes to a serialized file
-     * @param athletes
+     * @param athletes Athletes to save
      * @param path path to the db
      */
     @Override

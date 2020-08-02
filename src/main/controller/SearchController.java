@@ -80,18 +80,14 @@ public class SearchController {
         filteredEntries.setPredicate(string -> {
             if (searchString == null || searchString.isEmpty())
                 return true;
-            if (string.toLowerCase().contains(searchString.toLowerCase()))
-                return true;
-            return false;
+            return string.toLowerCase().contains(searchString.toLowerCase());
         });
 
         searchBar.textProperty().addListener((observable, oldValue, newValue) ->
             filteredEntries.setPredicate(string -> {
                 if (newValue == null || newValue.isEmpty())
                     return true;
-                if (string.toLowerCase().contains(newValue.toLowerCase()))
-                    return true;
-                return false;
+                return string.toLowerCase().contains(newValue.toLowerCase());
             })
         );
 

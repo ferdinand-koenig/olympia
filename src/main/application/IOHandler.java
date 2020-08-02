@@ -12,7 +12,7 @@ public interface IOHandler {
 
     /**
      * Writes to a data base
-     * @param athletes
+     * @param athletes Athletes to save
      * @param path path to the db
      */
     void write(HashMap<Integer, Athlete> athletes, String path);
