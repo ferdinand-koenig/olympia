@@ -13,43 +13,8 @@ public class Main{
     //beim einfügen auch kontrolle, ob die events/games schon bestehen
     //ev. einige Variablen auf final, wenn sie sich nicht ändern
     //Participation dennoch als innerclass? Umschreiben bei anderen Klassen -> ev in Konstruktot rein. Ganz am Ende
-    public static void main(String[] args){
-        IOHandler handler = new DBHandler();
-        IOHandler serializer = new Serializer();
-        HashMap<Integer, Athlete> athletes, newAthletes = new HashMap<>();
 
-        athletes = handler.read("C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\olympic.db");
-        System.out.println("First Message");
-        //HashMap<Integer, Athlete> athletes = serializer.read("C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\athletes.ser");
-
-        for(Map.Entry<Integer, Athlete> athleteEntry : athletes.entrySet()){
-            athleteEntry.getValue().debug();
-        }
-        newAthletes.put(140000, new Athlete(140000, "Max Mustermann", "M", 184, 78, new Team("World", "WRD"), new Participation(24, new Event("Hallo", "Wettessen", new Game(2020, "Summer", "Stuttgart")))));
-        //handler.write(athletes, "C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\olympia - Test.db");
-        serializer.write(newAthletes, "C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\athletes.ser");
-
-        System.out.println("newOne");
-        newAthletes= serializer.read("C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\athletes.ser");
-        for(Map.Entry<Integer, Athlete> athleteEntry : newAthletes.entrySet()){
-            athleteEntry.getValue().debug();
-        }
-    }
-
-    /*
-        Fragen:
-            - Is JavaDoc also necessary at obvious functions like getAge()?
-                Nein, bei anderen schon (Getter und Setter nicht)
-            - Do we have to check validity of the db?
-                Invalider wird die Datenbank nicht
-            - Können sich Gewicht und Höhe ändern?
-                Ja
-            - Wenn Funktion nie null bekommt, dann abfangen?
-                Nein, muss man nicht
-     */
-
-
-//}
+ */
 
 
 import javafx.application.Application;
@@ -66,7 +31,6 @@ import main.application.Athlete;
 import main.application.DBHandler;
 import main.application.IOHandler;
 import main.application.Serializer;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -74,6 +38,7 @@ import java.util.Optional;
 
 public class Main extends Application {
     private static HashMap<Integer, Athlete> athletes;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -95,8 +60,6 @@ public class Main extends Application {
         File db;
 
         athletes = ((db = loadFile(primaryStage)) == null) ? new HashMap<>() : handler.read(db.getPath());
-        //athletes = handler.read("C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\olympic.db");
-
         athletes = loadSerializedData();
 
         Button addBtn = (Button) scene.lookup("#addBtn");
@@ -196,8 +159,6 @@ public class Main extends Application {
     }
 
     private static HashMap<Integer, Athlete> loadSerializedData(){
-        //empty / delete while normal save
-        //Hinweisen
         if(!(new File("athletes.ser")).exists()) return athletes;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -206,7 +167,7 @@ public class Main extends Application {
         alert.setContentText("Choose wisely!");
 
         ButtonType buttonTypeConfirm = new ButtonType("Yes");
-        ButtonType buttonTypeCancel = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType buttonTypeCancel = new ButtonType("No, delete unsaved changes", ButtonBar.ButtonData.CANCEL_CLOSE);
 
         alert.getButtonTypes().setAll(buttonTypeConfirm, buttonTypeCancel);
 
@@ -214,7 +175,8 @@ public class Main extends Application {
         if (result.get() == buttonTypeConfirm){
             HashMap<Integer, Athlete> modifiedAthletes = (new Serializer()).read("athletes.ser");
             athletes.putAll(modifiedAthletes);
-        }
+        }else
+            (new File("athletes.ser")).delete();
 
         return athletes;
     }

@@ -121,7 +121,7 @@ public class AddAthleteController {
                         return;
                     }
 
-                    int nextFreeKey = Collections.max(athletes.keySet()) +1;
+                    int nextFreeKey = athletes.isEmpty() ? 1 : Collections.max(athletes.keySet()) +1;
 
                     Athlete incompleteAthlete = new Athlete(nextFreeKey, name, sex, height, weight, team, null);
                     AddEventController.getAgeAndAddParticipation(incompleteAthlete, modifiedAthletes, AddEventController.submitEntryForm(formScene), stage);

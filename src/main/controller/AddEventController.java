@@ -1,5 +1,6 @@
 package main.controller;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -8,12 +9,17 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import main.application.*;
-
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class AddEventController {
+    private static boolean hintAlreadyShownOnce = false;
+
     /**
      * Starts the process of creating a new event as part of the front-end. <p>
      * The Steps in the user experience are Step 1: showEntryForm(...)-> Step 2: athleteSelection(...) -> Step 3: getEventAndCreateAthlete(...)
@@ -120,6 +126,10 @@ public class AddEventController {
 
                     modifiedAthletes.put(athlete.getId(), athlete);
                     (new Serializer()).write(modifiedAthletes, "athletes.ser");
+                    if(!hintAlreadyShownOnce){
+                        hintAlreadyShownOnce = true;
+                        showHint();
+                    }
                     stage.close();
                 }
             });
@@ -171,5 +181,24 @@ public class AddEventController {
             System.err.println("Fatal: Cannot find AddAthleteToEvent.fxml");
             e.printStackTrace();
         }
+    }
+
+    private static void showHint(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Changes are automatically saved");
+        alert.setHeaderText("Changes of athletes are automatically saved in an internal file.");
+        alert.setContentText("Athletes are not yet exported in another db, but will not be lost after closing this program.");
+        ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(buttonTypeCancel);
+        alert.getDialogPane().lookupButton(buttonTypeCancel).setVisible(false);
+        alert.initStyle(StageStyle.UNDECORATED);
+
+        ScheduledExecutorService executor =  Executors.newSingleThreadScheduledExecutor();
+        executor.submit(() -> Platform.runLater(alert::show));
+        executor.schedule(
+                () -> Platform.runLater(() -> alert.close())
+                , 8
+                , TimeUnit.SECONDS);
     }
 }
