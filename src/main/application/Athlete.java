@@ -8,8 +8,8 @@ public class Athlete implements java.io.Serializable{
     private float weight;
     private String name, sex;
     private Team team; //Could be an athlete member of several teams? => No
-    private List<Medal> medals = new ArrayList<>();
-    private List<Participation> participations = new ArrayList<>();
+    private final List<Medal> medals = new ArrayList<>();
+    private final List<Participation> participations = new ArrayList<>();
 
     public Athlete(int id, String name, String sex, int height, float weight, Team team, Participation participation) {
         setId(id);
@@ -25,7 +25,7 @@ public class Athlete implements java.io.Serializable{
         return id;
     }
 
-    public void setId(int id) {
+    private void setId(int id) {
         this.id = id;
     }
 
@@ -33,7 +33,7 @@ public class Athlete implements java.io.Serializable{
         return height;
     }
 
-    public void setHeight(int height) {
+    private void setHeight(int height) {
         this.height = height;
     }
 
@@ -41,7 +41,7 @@ public class Athlete implements java.io.Serializable{
         return weight;
     }
 
-    public void setWeight(float weight) {
+    private void setWeight(float weight) {
         this.weight = weight;
     }
 
@@ -49,7 +49,7 @@ public class Athlete implements java.io.Serializable{
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -57,7 +57,7 @@ public class Athlete implements java.io.Serializable{
         return sex;
     }
 
-    public void setSex(String sex) {
+    private void setSex(String sex) {
         this.sex = sex;
     }
 
@@ -65,7 +65,7 @@ public class Athlete implements java.io.Serializable{
         return team;
     }
 
-    public void setTeam(Team team) {
+    private void setTeam(Team team) {
         this.team = team;
     }
 
@@ -77,7 +77,7 @@ public class Athlete implements java.io.Serializable{
         participations.add(participation);
     }
 
-    public List<Medal> getMedals() {
+    private List<Medal> getMedals() {
         return medals;
     }
 
@@ -86,29 +86,15 @@ public class Athlete implements java.io.Serializable{
     }
 
 
-    //auf jeden Fall löschen
-    public void debug(){
-        System.out.println(id + ": " + name + " (" + height + ", " + sex + ", " + weight + ") Member of Team: " + team.getName() + " in " + team.getNoc());
-    }
-
+    /**
+     * Checks whether the athlete has won a medal for a given event or not
+     * @param event event for which the existence of a medal is checked for
+     * @return Medal associated with event. If there is none, return value will be null
+     */
     public Medal wonMedalFor(Event event){
         for(Medal medal : this.getMedals())
             if(medal.getEvent().equals(event))
                 return medal;
         return null;
-    }
-
-    //eventuell weglassen
-    @Override
-    public int hashCode(){
-        return this.id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) return true;
-        if (!(o instanceof Athlete)) return false;
-
-        return ((Athlete) o).hashCode() == this.hashCode() && ((Athlete) o).sex.equals(this.sex) && ((Athlete) o).height == this.height && ((Athlete) o).name.equals(this.name) && ((Athlete) o).weight == this.weight;
     }
 }

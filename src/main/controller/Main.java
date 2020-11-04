@@ -1,151 +1,84 @@
 package main.controller;
 
-/*
-import java.util.HashMap;
-import java.util.Map;
-
-public class Main{
-    //Matrikelnummer.zip
-    //finalize vars
-    //JavaDoc fehlt
-    //Handling von exceptions
-    //Only adding new athletes
-    //beim einfügen auch kontrolle, ob die events/games schon bestehen
-    //ev. einige Variablen auf final, wenn sie sich nicht ändern
-    //Participation dennoch als innerclass? Umschreiben bei anderen Klassen -> ev in Konstruktot rein. Ganz am Ende
-    public static void main(String[] args){
-        IOHandler handler = new DBHandler();
-        IOHandler serializer = new Serializer();
-        HashMap<Integer, Athlete> athletes, newAthletes = new HashMap<>();
-
-        athletes = handler.read("C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\olympic.db");
-        System.out.println("First Message");
-        //HashMap<Integer, Athlete> athletes = serializer.read("C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\athletes.ser");
-
-        for(Map.Entry<Integer, Athlete> athleteEntry : athletes.entrySet()){
-            athleteEntry.getValue().debug();
-        }
-        newAthletes.put(140000, new Athlete(140000, "Max Mustermann", "M", 184, 78, new Team("World", "WRD"), new Participation(24, new Event("Hallo", "Wettessen", new Game(2020, "Summer", "Stuttgart")))));
-        //handler.write(athletes, "C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\olympia - Test.db");
-        serializer.write(newAthletes, "C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\athletes.ser");
-
-        System.out.println("newOne");
-        newAthletes= serializer.read("C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\athletes.ser");
-        for(Map.Entry<Integer, Athlete> athleteEntry : newAthletes.entrySet()){
-            athleteEntry.getValue().debug();
-        }
-    }
-
-    /*
-        Fragen:
-            - Is JavaDoc also necessary at obvious functions like getAge()?
-                Nein, bei anderen schon (Getter und Setter nicht)
-            - Do we have to check validity of the db?
-                Invalider wird die Datenbank nicht
-            - Können sich Gewicht und Höhe ändern?
-                Ja
-            - Wenn Funktion nie null bekommt, dann abfangen?
-                Nein, muss man nicht
-     */
-
-
-//}
-
-
 import javafx.application.Application;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
+import javafx.scene.text.TextFlow;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.application.Athlete;
 import main.application.DBHandler;
 import main.application.IOHandler;
-
+import main.application.Serializer;
+import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Optional;
 
 public class Main extends Application {
+    private static HashMap<Integer, Athlete> athletes;
+
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-       Parent root = FXMLLoader.load(getClass().getResource("UI.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("UI.fxml"));
 
-        Scene scene = new Scene(root, 800, 500);
+        Scene scene = new Scene(root, 700, 450);
 
         primaryStage.setTitle("Athletes");
         primaryStage.setScene(scene);
-
+        primaryStage.getIcons().add(new Image("https://img.icons8.com/officexs/72/athlete.png"));
+        primaryStage.setResizable(false);
+        primaryStage.show();
 
         IOHandler handler = new DBHandler();
-        HashMap<Integer, Athlete> athletes = new HashMap<>();
+        HashMap<Integer, Athlete> modifiedAthletes = new HashMap<>();
+        File db;
 
-        athletes = handler.read("C:\\Users\\koenigf\\OneDrive - Hewlett Packard Enterprise\\DHBW\\1. Year\\2. Semester\\Programming II\\Projekt\\olympic.db");
-
-        /*final ObservableList<Athlete> data = FXCollections.observableArrayList();
-        data.addAll(athletes.values());*/
+        athletes = ((db = loadFile(primaryStage)) == null) ? new HashMap<>() : handler.read(db.getPath());
+        athletes = loadSerializedData();
 
         Button addBtn = (Button) scene.lookup("#addBtn");
-        HashMap<Integer, Athlete> finalAthletes = athletes;
         addBtn.setOnMouseClicked(event -> {
             if(event.getButton()== MouseButton.PRIMARY){
-                showAddMenu(primaryStage, finalAthletes, scene);
+                showAddMenu(primaryStage, modifiedAthletes, scene);
             }
         });
 
         Button advSearchBtn = (Button) scene.lookup("#advSearchBtn");
         advSearchBtn.setOnMouseClicked(event -> {
             if(event.getButton()== MouseButton.PRIMARY) {
-                SearchController.showSearchScene(finalAthletes, primaryStage);
+                SearchController.showSearchScene(athletes, primaryStage);
             }
         });
 
-        addListenerToTableItems((TableView) scene.lookup("#table"), primaryStage);
-        fillTable(filterAthletes(athletes, (TextField) scene.lookup("#searchBar")), (TableView) scene.lookup("#table"));
-        primaryStage.show();
-    }
-
-    private static FilteredList<Athlete> filterAthletes(HashMap<Integer, Athlete> athletes, TextField searchBar){
-        ObservableList<Athlete> observableAthleteList = FXCollections.observableArrayList();
-        observableAthleteList.addAll(athletes.values());
-        FilteredList<Athlete> filteredAthletes = new FilteredList<>(observableAthleteList, p -> true);
-
-        searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredAthletes.setPredicate(person -> {
-                if (newValue == null || newValue.isEmpty())
-                    return true;
-                if (person.getName().toLowerCase().contains(newValue.toLowerCase()))
-                    return true;
-                if(Integer.toString(person.getId()).contains(newValue))
-                    return true;
-                return false;
-            });
+        Button saveBtn = (Button) scene.lookup("#saveBtn");
+        saveBtn.setOnMouseClicked(event -> {
+            if(event.getButton() == MouseButton.PRIMARY) {
+                File file;
+                if((file = saveFile(primaryStage)) == null)
+                    return;
+                handler.write(athletes, file.getPath());
+                if(!(new File("athletes.ser")).delete()) System.err.println("[Warning] Serializer in class Main: Could not delete file.");
+            }
         });
 
-        return filteredAthletes;
+        ControllerUtilities.fillTextFlow((TextFlow) scene.lookup("#hintTextFlow"), "Hint: Double-click on athlete for more details", 10);
+
+        //noinspection unchecked
+        addListenerToTableItems((TableView<Athlete>) scene.lookup("#table"), primaryStage);
+        //noinspection unchecked
+        ControllerUtilities.fillTable(ControllerUtilities.filterAthletes(athletes, (TextField) scene.lookup("#searchBar")), (TableView<Athlete>) scene.lookup("#table"));
     }
 
-    protected static void fillTable(FilteredList athletes, TableView table){
-        TableColumn idColumn = (TableColumn) table.getColumns().get(0);
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        TableColumn nameColumn = (TableColumn) table.getColumns().get(1);
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        TableColumn<Athlete, String> teamColumn = (TableColumn) table.getColumns().get(2);
-        teamColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getTeam().getName()));
-        table.setItems(athletes);
-    }
-
-    private static void addListenerToTableItems(TableView table, Stage primaryStage){
+    private static void addListenerToTableItems(TableView<Athlete> table, Stage primaryStage){
         table.setRowFactory(tv -> {
             TableRow<Athlete> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -160,7 +93,7 @@ public class Main extends Application {
         });
     }
 
-    private static void showAddMenu(Stage owner, HashMap<Integer, Athlete> athletes, Scene rootScene){
+    private static void showAddMenu(Stage owner, HashMap<Integer, Athlete> modifiedAthletes, Scene rootScene){
         try{
             Stage addMenu = new Stage();
             Scene addScene = new Scene(FXMLLoader.load(AthleteViewController.class.getResource("AddPopUp.fxml")), 300, 100);
@@ -171,14 +104,14 @@ public class Main extends Application {
             addAthleteBtn.setOnMouseClicked(event -> {
                 if(event.getButton() == MouseButton.PRIMARY){
                     addMenu.close();
-                    AddAthleteController.showEntryForm(owner, athletes, rootScene);
+                    AddAthleteController.showEntryForm(owner, athletes, modifiedAthletes, rootScene);
                 }
             });
 
             addEventBtn.setOnMouseClicked(event -> {
                 if(event.getButton() == MouseButton.PRIMARY){
                     addMenu.close();
-                    AddEventController.showEntryForm(owner, athletes);
+                    AddEventController.showEntryForm(owner, athletes, modifiedAthletes);
                 }
             });
 
@@ -192,8 +125,44 @@ public class Main extends Application {
         }
     }
 
-    protected static void updateAthleteTable(HashMap<Integer, Athlete> athletes, Scene scene){
-        ((TableView) scene.lookup("#table")).setItems(filterAthletes(athletes, (TextField) scene.lookup("#searchBar")));
-        ((TableView) scene.lookup("#table")).refresh();
+    private static File loadFile(Stage owner){
+        final FileChooser fc = new FileChooser();
+        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(
+                "CSV database (*.csv, *.db)", "*.csv", "*.db");
+        fc.getExtensionFilters().add(filter);
+        fc.setTitle("Choose an athlete database");
+        return fc.showOpenDialog(owner);
+    }
+
+    private static File saveFile(Stage owner){
+        final FileChooser fc = new FileChooser();
+        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(
+                "CSV database (*.csv, *.db)", "*.csv", "*.db");
+        fc.getExtensionFilters().add(filter);
+        fc.setTitle("Specify a file to save");
+        return fc.showSaveDialog(owner);
+    }
+
+    private static HashMap<Integer, Athlete> loadSerializedData(){
+        if(!(new File("athletes.ser")).exists()) return athletes;
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Found automatically saved athletes...");
+        alert.setHeaderText("Do you want to load your unsaved athletes from the last time?");
+        alert.setContentText("Choose wisely!");
+
+        ButtonType buttonTypeConfirm = new ButtonType("Yes");
+        ButtonType buttonTypeCancel = new ButtonType("No, delete unsaved changes", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(buttonTypeConfirm, buttonTypeCancel);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == buttonTypeConfirm){
+            HashMap<Integer, Athlete> modifiedAthletes = (new Serializer()).read("athletes.ser");
+            athletes.putAll(modifiedAthletes);
+        }else
+            if(!(new File("athletes.ser")).delete()) System.err.println("[Warning] Serializer in class Main: Could not delete file.");
+
+        return athletes;
     }
 }

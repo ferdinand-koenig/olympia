@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>main</OriginalElement>
+  <nodes>
+    <node x="821.6601190476191" y="1164.5714285714282">main.application.DBHandler</node>
+    <node x="428.94583333333327" y="552.5">main.application.Participation</node>
+    <node x="0.0" y="541.0">main.application.Team</node>
+    <node x="505.6601190476191" y="1253.0714285714282">main.application.Serializer</node>
+    <node x="1055.0" y="554.25">main.controller.AddEventController</node>
+    <node x="378.94583333333327" y="0.0">main.application.Game</node>
+    <node x="723.9458333333332" y="553.0">main.controller.AthleteViewController</node>
+    <node x="663.6601190476191" y="1038.5714285714282">main.application.IOHandler</node>
+    <node x="371.44583333333327" y="336.5">main.application.Event</node>
+    <node x="1055.0" y="764.25">main.controller.AddAthleteController</node>
+    <node x="1642.0" y="554.25">main.controller.ControllerUtilities</node>
+    <node x="413.44583333333327" y="812.5">main.controller.AthleteViewController.ParticipationListElement</node>
+    <node x="141.69583333333327" y="326.0">main.application.Medal.Value</node>
+    <node x="181.94583333333327" y="552.5">main.application.Medal</node>
+    <node x="49.44583333333327" y="713.0">main.application.Athlete</node>
+    <node x="29.44583333333327" y="1084.0">main.controller.Main</node>
+    <node x="1053.0" y="866.75">main.controller.SearchController</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="main.application.Medal.Value" target="main.application.Medal">
+      <point x="39.75" y="82.5" />
+      <point x="0.0" y="-49.5" />
+    </edge>
+    <edge source="main.controller.AthleteViewController.ParticipationListElement" target="main.controller.AthleteViewController">
+      <point x="98.33333333333337" y="-61.0" />
+      <point x="659.2791666666667" y="693.0" />
+      <point x="871.1958333333332" y="693.0" />
+      <point x="0.0" y="49.0" />
+    </edge>
+    <edge source="main.application.DBHandler" target="main.application.IOHandler">
+      <point x="0.0" y="-126.5" />
+      <point x="969.6601190476191" y="1139.5714285714282" />
+      <point x="885.6601190476191" y="1139.5714285714282" />
+      <point x="74.0" y="38.0" />
+    </edge>
+    <edge source="main.application.Serializer" target="main.application.IOHandler">
+      <point x="0.0" y="-38.0" />
+      <point x="653.6601190476191" y="1139.5714285714282" />
+      <point x="737.6601190476191" y="1139.5714285714282" />
+      <point x="-74.0" y="38.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.4659248956884562" x="1042.0" y="709.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

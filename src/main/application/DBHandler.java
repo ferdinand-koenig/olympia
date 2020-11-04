@@ -2,7 +2,6 @@ package main.application;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,9 +14,13 @@ public class DBHandler implements IOHandler{
     public DBHandler(){
     }
 
+    /**
+     * Reads from a comma separated data base
+     * @param path path to the db
+     * @return Athletes from the given database
+     */
     @Override
     public HashMap<Integer, Athlete> read(String path) {
-        // validity of db
         String line;
         Pattern pattern = Pattern.compile(",");
         String[] attribute;
@@ -37,7 +40,7 @@ public class DBHandler implements IOHandler{
         Game game;
 
         try (BufferedReader in = new BufferedReader(new FileReader(path))) {
-            in.readLine(); //Forget first line  //what happens if file is empty
+            in.readLine();
             while((line = in.readLine()) != null) {
                 attribute = fixSplit(pattern.split(line));
 
@@ -64,14 +67,18 @@ public class DBHandler implements IOHandler{
                             break;
                         }
             }
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (IOException e){
+            System.err.println("IOException in DBHandler.read!");
             e.printStackTrace();
         }
         return athletes;
     }
 
+    /**
+     * Writes to a comma separated data base
+     * @param athletes Athletes to save
+     * @param path path to the db
+     */
     @Override
     public void write(HashMap<Integer, Athlete> athletes, String path) {
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(path))){
@@ -124,7 +131,7 @@ public class DBHandler implements IOHandler{
         personPartOne = personPartOne.concat(wrap(addDoubleQuotes(athlete.getName()))).concat(",");
         personPartOne = personPartOne.concat(wrap(athlete.getSex())).concat(",");
 
-        personPartTwo = athlete.getHeight() == -1 ? "NA" : Integer.toString(athlete.getHeight()).concat(",");
+        personPartTwo = athlete.getHeight() == -1 ? "NA".concat(",") : Integer.toString(athlete.getHeight()).concat(",");
         if(Float.compare(athlete.getWeight(), -1.0f) == 0){
             weight = "NA";
         }else{

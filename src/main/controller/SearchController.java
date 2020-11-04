@@ -1,29 +1,29 @@
 package main.controller;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import main.application.Athlete;
-
 import java.io.IOException;
 import java.util.HashMap;
 
-public class SearchController {
-    public static void showSearchScene(HashMap<Integer, Athlete> athletes, Stage owner){
+class SearchController {
+    /**
+     * Handles and creates the search pop-up
+     * @param athletes All athletes
+     * @param owner The logical owner window of the new pop-up
+     */
+    static void showSearchScene(HashMap<Integer, Athlete> athletes, Stage owner){
         Stage stage = new Stage();
         try {
             Scene searchScene = new Scene(FXMLLoader.load(SearchController.class.getResource("Search.fxml")));
 
-            ComboBox<String> categoryComboBox = (ComboBox) searchScene.lookup("#categoryComboBox");
+            @SuppressWarnings("unchecked") ComboBox<String> categoryComboBox = (ComboBox<String>) searchScene.lookup("#categoryComboBox");
             categoryComboBox.setItems(FXCollections.observableArrayList(
                     "Team",
                     "Sport",
@@ -31,7 +31,8 @@ public class SearchController {
                     "Game"
             ));
 
-            ListView list = (ListView) searchScene.lookup("#listView");
+            //noinspection unchecked
+            ListView<String> list = (ListView<String>) searchScene.lookup("#listView");
             HashMap<String, String> entries = new HashMap<>();
             categoryComboBox.getSelectionModel().selectedItemProperty().addListener( (options, oldValue, newValue) -> {
                     entries.clear();
@@ -59,15 +60,9 @@ public class SearchController {
                                     )
                             );
                         }
-                    list.setItems(filterList(entries, (TextField) searchScene.lookup("#searchBar")));
+                list.setItems(filterList(entries, (TextField) searchScene.lookup("#searchBar")));
                 }
             );
-
-            /*
-            Analog zu der Athletenanzeige sollen auch Teams (Suche nach Namen), Sportarten (Suche
-nach Namen), Events (Suche nach Namen) und Olympische Spiele (Suche nach Jahreszahl)
-angezeigt werden können.
-             */
 
             stage.setTitle("Advanced Search");
             stage.setScene(searchScene);
@@ -86,20 +81,16 @@ angezeigt werden können.
         filteredEntries.setPredicate(string -> {
             if (searchString == null || searchString.isEmpty())
                 return true;
-            if (string.toLowerCase().contains(searchString.toLowerCase()))
-                return true;
-            return false;
+            return string.toLowerCase().contains(searchString.toLowerCase());
         });
 
-        searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+        searchBar.textProperty().addListener((observable, oldValue, newValue) ->
             filteredEntries.setPredicate(string -> {
                 if (newValue == null || newValue.isEmpty())
                     return true;
-                if (string.toLowerCase().contains(newValue.toLowerCase()))
-                    return true;
-                return false;
-            });
-        });
+                return string.toLowerCase().contains(newValue.toLowerCase());
+            })
+        );
 
         return filteredEntries;
     }

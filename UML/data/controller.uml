@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>main.controller</OriginalElement>
+  <nodes>
+    <node x="791.0000000000001" y="448.0">main.controller.AddAthleteController</node>
+    <node x="1107.8333333333335" y="212.0">main.controller.AddEventController</node>
+    <node x="395.4375" y="233.5">main.controller.AthleteViewController.ParticipationListElement</node>
+    <node x="916.6534722222224" y="0.0">main.controller.ControllerUtilities</node>
+    <node x="456.0000000000001" y="437.0">main.controller.AthleteViewController</node>
+    <node x="828.2805555555556" y="615.0">main.controller.Main</node>
+    <node x="20.0" y="448.0">main.controller.SearchController</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="main.controller.AthleteViewController.ParticipationListElement" target="main.controller.AthleteViewController">
+      <point x="110.625" y="61.0" />
+      <point x="653.5625" y="417.0" />
+      <point x="640.3750000000001" y="417.0" />
+      <point x="36.875" y="-49.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.7545454545454545" x="835.0" y="412.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

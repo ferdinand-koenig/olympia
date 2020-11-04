@@ -12,7 +12,7 @@ public class Team implements java.io.Serializable{
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -20,7 +20,7 @@ public class Team implements java.io.Serializable{
         return noc;
     }
 
-    public void setNoc(String noc) {
+    private void setNoc(String noc) {
         this.noc = noc;
     }
 
